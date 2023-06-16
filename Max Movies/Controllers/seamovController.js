@@ -48,13 +48,48 @@ export const createSeaMov = async (req, res) => {
 
 export const getSeaMovPhoto = async (req, res) => {
   try {
-      const product = await seamovmodal.findById(req.params.pid).select("photo");
-      if (product.photo.data) {
-          res.set("Content-Type", product.photo.contentType);
+      const seamovPhoto = await seamovmodal.findById(req.params.id).select("photo");
+      if (seamovPhoto.photo.data) {
+          res.set("Content-Type", seamovPhoto.photo.contentType);
 
-          res.send(product.photo.data);
+          res.send(seamovPhoto.photo.data);
       }
   } catch (err) {
       res.send(err);
   }
+}
+
+export const getSeaMov = async (req,res) =>{
+  try{
+    const getSeaMov = await seamovmodal.find({})
+    res.send(getSeaMov)
+
+
+  }catch(err){
+    res.send(err);
+
+  }
+}
+
+export const getSeaMovSlug = async (req,res) =>{
+  try{
+    const getSeaMov = await seamovmodal.findOne({slug:req.params.slug}).select("-photo")
+
+    res.send(getSeaMov)
+
+  }catch(err){
+    res.send(err);
+
+  }
+}
+
+export const deleteSeaMov = async(req,res) =>{
+    try {
+        const seaMov = await seamovmodal.findByIdAndDelete(req.params.id).select("-photo");
+        res.send(seaMov)
+    } catch (err) {
+        res.send(err);
+        console.log(err)
+    }
+
 }
