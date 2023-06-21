@@ -93,3 +93,59 @@ export const deleteSeaMov = async(req,res) =>{
     }
 
 }
+
+export const updateSeaMov = async (req, res) => {
+  try {
+    const { name, movie, season, dateoflaunch, category, description, tags } = req.fields;
+    const { photo } = req.files;
+
+    const errors = [];
+
+    if (!name) {
+      errors.push("Name is required");
+    }
+
+    if (!description) {
+      errors.push("Description is required");
+    }
+
+    if (!dateoflaunch) {
+      errors.push("Date of launch is required");
+    }
+
+    if (!category) {
+      errors.push("Category is required");
+    }
+
+    if (photo && photo.size > 10000000) {
+      errors.push("Photo is required and it should not be greater than 1000");
+    }
+
+    if (errors.length > 0) {
+      return res.send(errors.join(", "));
+    }
+
+    const product = await seamovmodal.findByIdAndUpdate(
+      req.params.id,
+      { ...req.fields, slug: slugify(name) },
+      { new: true }
+    );
+
+    if (!product) {
+      console.log(`Could not find product with ID ${req.params.id}`);
+      return res.send(`Could not find product with ID ${req.params.id}`);
+    }
+
+    if (photo) {
+      product.photo.data = fs.readFileSync(photo.path);
+      product.contentType = photo.type;
+    }
+
+    await product.save();
+
+    res.send(product);
+  } catch (err) {
+    console.log(err);
+    res.send(err);
+  }
+};
