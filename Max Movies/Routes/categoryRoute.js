@@ -8,7 +8,7 @@ router.post("/create-category",requireSignIn,createCategory)
 
 router.put("/update-category/:id",requireSignIn,updateCategory)
 
-router.get("/get-category",requireSignIn,showCategory)
+router.get("/get-category",showCategory)
 
 router.delete("/delete-category/:id",requireSignIn,deleteCategory)
 
