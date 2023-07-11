@@ -65,7 +65,7 @@ const AddCategory = () => {
                     'auth-token': auth.token
                 }
             })
-            console.log(`${data} category is deleted`)
+            console.log(`${data} category is uddated`)
             getCategory()
         } catch (err) {
             console.log(err)

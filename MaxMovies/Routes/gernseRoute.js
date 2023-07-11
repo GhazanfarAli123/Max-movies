@@ -8,7 +8,7 @@ router.post("/create-gernse",requireSignIn,createGernse)
 
 router.put("/update-gernse/:id",requireSignIn,updateGernse)
 
-router.get("/get-gernse/",getGernse)
+router.get("/get-gernse",getGernse)
 
 router.delete("/delete-gernse/:id",requireSignIn,deleteGernse)
 
