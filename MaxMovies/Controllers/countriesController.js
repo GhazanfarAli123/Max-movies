@@ -3,7 +3,7 @@ import countriesmodal from "../Modals/countriesmodal.js";
 
 export const createCountry = async(req,res) =>{
     try{
-        const {name, episodes} = req.body
+        const {name} = req.body
         if(!name){
             return res.status(400).json({ message: "country name is required" });
         }
@@ -11,7 +11,7 @@ export const createCountry = async(req,res) =>{
         if(seasonExists){
             return res.status(400).json({ message: "country is already existed" })
         }
-        const season = await new countriesmodal({name,episodes,slug:slugify(name)}).save()
+        const season = await new countriesmodal({name,slug:slugify(name)}).save()
         res.send(season)
 
     }catch(err){

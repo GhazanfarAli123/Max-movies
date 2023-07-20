@@ -7,7 +7,7 @@ const router = express.Router()
 
 router.post("/create-movies",requireSignIn,createMovie)
 
-router.get("/get-movies",requireSignIn,getMovie)
+router.get("/get-movies",getMovie)
 
 router.put("/update-movies/:id",requireSignIn,updateMovie)
 

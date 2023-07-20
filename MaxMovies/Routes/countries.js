@@ -9,7 +9,7 @@ router.post("/create-country",requireSignIn,createCountry)
 
 router.put("/update-country/:id",requireSignIn,updateCountry)
 
-router.get("/get-country",requireSignIn,getCountry)
+router.get("/get-country",getCountry)
 
 router.delete("/delete-country/:id",requireSignIn,deleteCountry )
 
