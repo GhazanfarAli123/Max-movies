@@ -3,32 +3,36 @@ import AdminNavbar from './adminNavbar';
 import axios from 'axios';
 import { useAuth } from '../Context/auth';
 const AddSeason = () => {
-    // const [name, setName] = useState('');
-    // const [season, setSeason] = useState([]);
-    // const [episode,setEpisode] = useState([])
-    // const [updateName, setUpdateName] = useState("")
-    // const [selected, setSelected] = useState("")
-    const [episodes, setEpisodes] = useState([]);
+    const [name, setName] = useState('');
+    const [season, setSeason] = useState([]);
+    const [episode,setEpisode] = useState([])
+    const [updateName, setUpdateName] = useState("")
+    const [selected, setSelected] = useState("")
     const [auth] = useAuth();
+    const [episodes, setEpisodes] = useState([]);
+    const [selectedCategories, setSelectedCategories] = useState([]);
 
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-    //     try {
-    //         const { data } = await axios.post(
-    //             'http://localhost:1000/api/v1/country/create-season',
-    //             { name ,episode },
-    //             {
-    //                 headers: {
-    //                     'auth-token': auth.token,
-    //                 },
-    //             }
-    //         );
-    //         console.log(`country ${data.name} added`);
-    //         getCategory()
-    //     } catch (err) {
-    //         console.log(err);
-    //     }
-    // };
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+          const { data } = await axios.post(
+            'http://localhost:1000/api/v1/season/create-season',
+            { name, episodes: selectedCategories }, // Use selectedCategories
+            {
+              headers: {
+                'auth-token': auth.token,
+              },
+            }
+          );
+          console.log('Season created:', data);
+          // Clear the form after successful submission (optional)
+          setName('');
+          setSelectedCategories([]);
+        } catch (err) {
+          console.log('Error creating season:', err);
+        }
+      };
+      
 
     // const getCategory = async (e) => {
     //     try {
@@ -72,28 +76,39 @@ const AddSeason = () => {
     //     }
     // }
 
+    const handleCheckboxChange = (event) => {
+        const categoryId = event.target.value;
+        const isChecked = event.target.checked;
 
-    const get_episodes = async () => {
-        try {
-          const { data } = await axios.get('http://localhost:1000/api/v1/episode/get-episodes');
-          setEpisodes(data);
-        } catch (err) {
-          console.log(err);
+        if (isChecked) {
+            setSelectedCategories((prevSelected) => [...prevSelected, categoryId]);
+        } else {
+            setSelectedCategories((prevSelected) =>
+                prevSelected.filter((id) => id !== categoryId)
+            );
         }
-      };
-    
-      useEffect(() => {
-        get_episodes();
-      }, []);
+    };
 
+    const fetchEpisodes = async () => {
+        try {
+            const response = await axios.get('http://localhost:1000/api/v1/episode/get-episodes');
+            setEpisodes(response.data);
+        } catch (error) {
+            console.error('Error fetching episodes:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchEpisodes();
+    }, []);
 
     return (
         <>
             <AdminNavbar />
             <div className="container">
-                <div className='row'>
-                    <div className='col-6'>
-                        {/* <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit}>
+                    <div className='row'>
+                        <div className='col-6'>
                             <div className="form-group">
                                 <label htmlFor="exampleInputEmail1">Enter Country</label>
                                 <input
@@ -109,22 +124,23 @@ const AddSeason = () => {
                             <button type="submit" className="btn btn-primary">
                                 Submit
                             </button>
-                        </form> */}
+                        </div>
+                        <div className='col-6'>
+                            {episodes.map((e) => (
+                                <label key={e._id}>
+                                    <input
+                                        type="checkbox"
+                                        name="category"
+                                        value={e._id}
+                                        onChange={handleCheckboxChange}
+                                    />{' '}
+                                    {e.name}
+                                </label>
+                            ))}
+
+                        </div>
                     </div>
-                    <div className='col-6'>
-                    <div className='col-6'>
-    {episodes.map((c) => (
-        <div key={c.id}>
-            <label>
-                <input type='checkbox' />
-                {c.name}
-            </label>
-        </div>
-    ))}
-</div>
-                       
-                    </div>
-                </div>
+                </form>
                 <table className="table">
                     <thead>
                         <tr>
