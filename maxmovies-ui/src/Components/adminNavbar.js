@@ -15,6 +15,18 @@ function adminNavbar() {
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="/admin/dashboard/add-category">Add Category</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/admin/dashboard/add-movie">Add Movie</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/admin/dashboard/add-episode">Add Episode</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/admin/dashboard/add-gerneses">Add Gernse</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/admin/dashboard/add-country">Add Country</a>
+        </li>
        </ul>
     </div>
   </div>

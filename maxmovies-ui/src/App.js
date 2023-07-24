@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import './App.css'
 import HomePage from "./Pages/HomePage.js";
 import { AdminDashboard } from './Pages/AdminDashboard.js';
 import AdminLogIn from './Components/AdminLogIn.js';
