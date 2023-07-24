@@ -120,7 +120,6 @@ const AddMovie = () => {
               <tr key={c.id}>
                 <th scope='row'>{index + 1}</th>
                 <td>{c.name}</td>
-                <td>{c.movie}</td>
 
                 {/* <td dangerouslySetInnerHTML={{ __html: c.movie }}></td> */}
                 <td>
