@@ -27,6 +27,9 @@ function adminNavbar() {
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="/admin/dashboard/add-country">Add Country</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/admin/dashboard/add-season">Add Season</a>
+        </li>
        </ul>
     </div>
   </div>

@@ -2,23 +2,31 @@ import React, { useEffect, useState } from 'react';
 import AdminNavbar from './adminNavbar';
 import axios from 'axios';
 import { useAuth } from '../Context/auth';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+
 const AddSeason = () => {
     const [name, setName] = useState('');
     const [season, setSeason] = useState([]);
     const [episode, setEpisode] = useState([])
     const [updateName, setUpdateName] = useState("")
+    const [updateSeason, setUpdateSeason] = useState("")
     const [selected, setSelected] = useState("")
     const [auth] = useAuth();
     const [episodes, setEpisodes] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([]);
+    const [updateselectedCategories, setUpdateSelectedCategories] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        // e.preventDefault();
         try {
             const { data } = await axios.post(
                 'http://localhost:1000/api/v1/season/create-season',
-                { name, episodes: selectedCategories }, // Use selectedCategories
+                { name, episodes: selectedCategories },
                 {
                     headers: {
                         'auth-token': auth.token,
@@ -26,7 +34,6 @@ const AddSeason = () => {
                 }
             );
             console.log('Season created:', data);
-            // Clear the form after successful submission (optional)
             setName('');
             setSelectedCategories([]);
         } catch (err) {
@@ -62,20 +69,20 @@ const AddSeason = () => {
             console.log(err)
         }
     }
-    // const handelUpdate = async (e) => {
-    //     e.preventDefault()
-    //     try {
-    //         const { data } = await axios.put(`http://localhost:1000/api/v1/country/update-country/${selected._id}`, { name: updateName }, {
-    //             headers: {
-    //                 'auth-token': auth.token
-    //             }
-    //         })
-    //         console.log(`${data.name} country is uddated`)
-    //         getCategory()
-    //     } catch (err) {
-    //         console.log(err)
-    //     }
-    // }
+    const handelUpdate = async (e) => {
+        e.preventDefault()
+        try {
+            const { data } = await axios.put(`http://localhost:1000/api/v1/season/update-season/${selected._id}`, { name: updateName, episodes: updateselectedCategories }, {
+                headers: {
+                    'auth-token': auth.token
+                }
+            })
+            console.log(`${data.name} season is uddated`)
+            get_season()
+        } catch (err) {
+            console.log(err)
+        }
+    }
 
     const handleCheckboxChange = (event) => {
         const categoryId = event.target.value;
@@ -86,6 +93,18 @@ const AddSeason = () => {
         } else {
             setSelectedCategories((prevSelected) =>
                 prevSelected.filter((id) => id !== categoryId)
+            );
+        }
+    };
+    const handleUpdateCheckboxChange = (event) => {
+        const updatedcategoryId = event.target.value;
+        const isUpdateChecked = event.target.checked;
+
+        if (isUpdateChecked) {
+            setUpdateSelectedCategories((prevSelected) => [...prevSelected, updatedcategoryId]);
+        } else {
+            setUpdateSelectedCategories((prevSelected) =>
+                prevSelected.filter((id) => id !== updatedcategoryId)
             );
         }
     };
@@ -176,9 +195,78 @@ const AddSeason = () => {
                                 <tr>
                                     <th scope="row">{index + 1}</th>
                                     <td>{c.name}</td>
+                                    <td>{c.episodes.length}</td>
                                     <td>
-                                    <button type="button" class="btn btn-danger mx-2" onClick={() => handelDelete(c._id)}>Delete</button>
-                                        </td>
+                                        <button type="button" class="btn btn-danger mx-2" onClick={() => handelDelete(c._id)}>Delete</button>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" onClick={() => {
+                                            setUpdateName(c.name);
+                                            setUpdateSelectedCategories(c.episodes);
+                                            setSelected(c);
+                                        }} data-bs-target="#exampleModal">
+                                            Edit
+                                        </button>
+
+                                        <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div className="modal-dialog">
+                                                <div className="modal-content">
+                                                    <div className="modal-header">
+                                                        <h5 className="modal-title" id="exampleModalLabel">Update Season</h5>
+                                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div className="modal-body">
+                                                        <form onSubmit={handelUpdate}>
+                                                            <div className="row">
+                                                                <div className="col-6">
+                                                                    <div className="form-group">
+                                                                        <label htmlFor="exampleInputEmail1">Enter Updated Season</label>
+                                                                        <input
+                                                                            type="text"
+                                                                            className="form-control"
+                                                                            id="exampleInputEmail1"
+                                                                            aria-describedby="emailHelp"
+                                                                            placeholder="Enter Season Name"
+                                                                            value={updateName}
+                                                                            onChange={(e) => setUpdateName(e.target.value)}
+                                                                        />
+                                                                    </div>
+                                                                    <button type="submit" className="btn btn-primary">
+                                                                        Submit
+                                                                    </button>
+                                                                </div>
+                                                                <div className="col-6 season-select">
+                                                                    <ul className="seasoncheck">
+                                                                        <input
+                                                                            type="text"
+                                                                            placeholder="Search Episodes"
+                                                                            value={searchQuery}
+                                                                            onChange={handleSearch}
+                                                                        />
+                                                                        {filteredEpisodes.map((episode) => (
+                                                                            <li key={episode._id}>
+                                                                                <label>
+                                                                                    <input
+                                                                                        type="checkbox"
+                                                                                        name="category"
+                                                                                        value={episode._id}
+                                                                                        onChange={handleUpdateCheckboxChange}
+                                                                                        checked={updateselectedCategories.includes(episode._id)}
+                                                                                    />{' '}
+                                                                                    {episode.name}
+                                                                                </label>
+                                                                            </li>
+                                                                        ))}
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <div className="modal-footer">
+                                                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
                                 </tr>
                             </>
                         ))}

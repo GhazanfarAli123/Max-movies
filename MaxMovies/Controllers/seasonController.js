@@ -21,12 +21,12 @@ export const createSeason = async(req,res) =>{
 }
 export const updateSeason = async(req,res) =>{
     try{
-        const {name} = req.body
+        const {name ,episodes} = req.body
         const {id} = req.params
         if(!name){
             return res.status(400).json({ message: "season name is required" });
         }
-        const season = await seasonModal.findByIdAndUpdate(id,{name,slug:slugify(name)},{new:true})
+        const season = await seasonModal.findByIdAndUpdate(id,{name,episodes,slug:slugify(name)},{new:true})
         res.send(season)
 
     }catch(err){
