@@ -10,12 +10,14 @@ import AddCountry from './Components/AddCountry.js';
 import AddMovie from './Components/AddMovie.js';
 import AddEpisode from './Components/AddEpisode.js';
 import AddSeason from './Components/AddSeason.js';
+import AdminSignUp from './Components/AdminSignUp';
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/signup" element={<AdminSignUp />} />
           <Route path="admin" element={<AdminLogIn />} />
         <Route path="admin" element={<AdminRoute />}>
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
