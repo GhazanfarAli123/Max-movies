@@ -101,7 +101,7 @@ const AddCountry = () => {
                 <table className="table">
                     <thead>
                         <tr>
-                            <th scope="col">Categories</th>
+                            <th scope="col">Countries</th>
                         </tr>
                     </thead>
                     <tbody>

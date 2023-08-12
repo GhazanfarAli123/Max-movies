@@ -30,6 +30,9 @@ function adminNavbar() {
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="/admin/dashboard/add-season">Add Season</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/admin/dashboard/add-seamov">Add SeaMov</a>
+        </li>
        </ul>
     </div>
   </div>

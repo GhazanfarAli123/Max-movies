@@ -4,7 +4,7 @@ import fs from "fs";
 
 export const createSeaMov = async (req, res) => {
   try {
-    const { name, movie, season, dateoflaunch, category, description, tags } = req.fields;
+    const { name, movie, season,gerneses, dateoflaunch, category, description, tags } = req.fields;
 
     // Check if 'req.files' exists and if 'photo' is present
     if (!req.files || !req.files.photo) {
@@ -19,6 +19,9 @@ export const createSeaMov = async (req, res) => {
         res.send("name is required");
         break;
       case !description:
+        res.send("description is required");
+        break;
+      case !gerneses:
         res.send("description is required");
         break;
       case !category:
@@ -96,7 +99,7 @@ export const deleteSeaMov = async(req,res) =>{
 
 export const updateSeaMov = async (req, res) => {
   try {
-    const { name, movie, season, dateoflaunch, category, description, tags } = req.fields;
+    const { name,gerneses, movie, season, dateoflaunch, category, description, tags } = req.fields;
     const { photo } = req.files;
 
     const errors = [];
@@ -106,6 +109,10 @@ export const updateSeaMov = async (req, res) => {
     }
 
     if (!description) {
+      errors.push("Description is required");
+    }
+
+    if (!gerneses) {
       errors.push("Description is required");
     }
 

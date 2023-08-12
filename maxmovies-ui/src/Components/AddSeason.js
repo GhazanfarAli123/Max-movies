@@ -8,9 +8,7 @@ import Modal from 'react-bootstrap/Modal';
 const AddSeason = () => {
     const [name, setName] = useState('');
     const [season, setSeason] = useState([]);
-    const [episode, setEpisode] = useState([])
     const [updateName, setUpdateName] = useState("")
-    const [updateSeason, setUpdateSeason] = useState("")
     const [selected, setSelected] = useState("")
     const [auth] = useAuth();
     const [episodes, setEpisodes] = useState([]);

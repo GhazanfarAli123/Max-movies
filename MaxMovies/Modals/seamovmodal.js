@@ -33,6 +33,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  gerneses:[{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:"gernses"
+  }],
   tags:[{
     type:String,
     required:true
