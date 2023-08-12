@@ -113,7 +113,7 @@ export const updateSeaMov = async (req, res) => {
     }
 
     if (!gerneses) {
-      errors.push("Description is required");
+      errors.push("Gernese is required");
     }
 
     if (!dateoflaunch) {
