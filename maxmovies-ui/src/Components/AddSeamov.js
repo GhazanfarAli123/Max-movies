@@ -8,8 +8,11 @@ const AddSeamov = () => {
   const [name, setName] = useState("")
   const [category, setCategory] = useState([]);
   const [season, setSeason] = useState([]);
+  const [movie, setMovie] = useState([]);
+  const [selectedMovie, setSelectedMovie] = useState([]);
+  const [movieQuery, setMovieQuery] = useState('');
   const [selectedSeason, setSelectedSeason] = useState([]);
-  const [selectedSeasonQuery, setSelectedSeasonQuery] = useState([]);
+  const [selectedSeasonQuery, setSelectedSeasonQuery] = useState("");
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [gerneses, setGerneses] = useState([]);
@@ -20,6 +23,8 @@ const AddSeamov = () => {
   const [gernseSearchQuery, setGernseSearchQuery] = useState('')
   const [startDate, setStartDate] = useState(new Date());
   const [desc, setDesc] = useState("")
+  const [photo, setPhoto] = useState("")
+
 
 
   const getCategory = async () => {
@@ -39,6 +44,11 @@ const AddSeamov = () => {
   const getSeasons = async () => {
     const { data } = await axios.get("http://localhost:1000/api/v1/season/get-season")
     setSeason(data);
+  }
+
+  const getMovie = async () => {
+    const { data } = await axios.get("http://localhost:1000/api/v1/movie/get-movies")
+    setMovie(data);
   }
 
 
@@ -80,6 +90,29 @@ const AddSeamov = () => {
       );
     }
   };
+  const handleCheckboxforMovies = (event) => {
+    const moviesId = event.target.value;
+    const isChecked = event.target.checked;
+
+    if (isChecked) {
+      setSelectedMovie((prevSelected) => [...prevSelected, moviesId]);
+    } else {
+      setSelectedMovie((prevSelected) =>
+        prevSelected.filter((id) => id !== moviesId)
+      );
+    }
+  };
+
+  const handelCreate = async(e) =>{
+    try{
+      const seamov = new FormData()
+      seamov.append("name" , name);
+      
+
+    }catch(err){
+      console.log(err);
+    }
+  }
 
   const handleCheckboxChangefCountry = (event) => {
     const countryId = event.target.value;
@@ -99,6 +132,7 @@ const AddSeamov = () => {
     getGerneses();
     getCounty();
     getSeasons();
+    getMovie();
   }, []);
 
   const handleSearch = (event) => {
@@ -111,6 +145,9 @@ const AddSeamov = () => {
   const handleSeasonSearch = (event) => {
     setSelectedSeasonQuery(event.target.value);
   };
+  const handleMoviesSearch = (event) => {
+    setMovieQuery(event.target.value);
+  };
 
   const filteredCountries = country.filter((country) =>
     country.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -122,9 +159,14 @@ const AddSeamov = () => {
   const filteredCategory = category.filter((cat) =>
     cat.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
-  const filteredSeasons = season.filter((season) =>
-    season.name.toLowerCase().includes(selectedSeasonQuery.toLowerCase())
+  const filteredSeasons = season.filter((sea) =>
+    sea.name && sea.name.toLowerCase().includes(selectedSeasonQuery.toLowerCase())
   );
+
+  const filteredMovies = movie.filter((mov) =>
+    mov.name && mov.name.toLowerCase().includes(movieQuery.toLowerCase())
+  );
+
 
   const removeTagData = (indexToRemove) => {
     setTagData([...tagData.filter((_, index) => index !== indexToRemove)]);
@@ -136,6 +178,43 @@ const AddSeamov = () => {
       event.target.value = '';
     }
   };
+
+
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+
+    if (selectedFile) {
+      resizeImage(selectedFile);
+    }
+  };
+
+  const resizeImage = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+
+    reader.onload = (e) => {
+      const img = new Image();
+      img.src = e.target.result;
+
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const MAX_WIDTH = 800; // Maximum width after resizing
+        const scaleFactor = MAX_WIDTH / img.width;
+
+        canvas.width = MAX_WIDTH;
+        canvas.height = img.height * scaleFactor;
+
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+        canvas.toBlob((blob) => {
+          const resizedFile = new File([blob], file.name, { type: 'image/jpeg', lastModified: Date.now() });
+          setPhoto(resizedFile);
+        }, 'image/jpeg', 0.7); // Compression quality (0.7 = 70%)
+      };
+    };
+  };
+
 
   return (
     <div className='bg-dark text-white'>
@@ -261,34 +340,77 @@ const AddSeamov = () => {
                   onChange={(e) => setDesc(e.target.value)}
                 />
               </div>
+              {photo ? (
+                <div className='image'>
+                  <img
+                    src={URL.createObjectURL(photo)}
+                    alt='product_image'
+                    height='200px'
+                    className='img img-responsive'
+                  />
+                </div>
+              ) : (
+                <div>{photo ? photo.name : 'Upload Image'}</div>
+              )}
+              <input
+                type='file'
+                name='photo'
+                accept='image/*'
+                onChange={handleFileChange}
+              />
             </div>
             <div className='col-3'>
-              <h2>Add Season</h2>
-            <input
+              <div className='seasons'>
+                <h2>Add Season</h2>
+                <input
                   type='text'
                   placeholder='Search Genres'
                   value={selectedSeasonQuery}
                   onChange={handleSeasonSearch}
                 />
-                 {filteredSeasons.map((c) => (
-                    <li key={c._id}>
-                      <label>
-                        <input
-                          type='checkbox'
-                          name='season'
-                          value={c._id}
-                          onChange={handleCheckboxforSeasons}
-                          checked={selectedSeason.includes(c._id)}
-                        />{' '}
-                        {c.name}
-                      </label>
-                    </li>
-                  ))}
+                {filteredSeasons.map((c) => (
+                  <li key={c._id}>
+                    <label>
+                      <input
+                        type='checkbox'
+                        name='season'
+                        value={c._id}
+                        onChange={handleCheckboxforSeasons}
+                        checked={selectedSeason.includes(c._id)}
+                      />{' '}
+                      {c.name}
+                    </label>
+                  </li>
+                ))}
+              </div>
+              <div className='movies'>
+                <h2>Add Movies</h2>
+                <input
+                  type='text'
+                  placeholder='Search Genres'
+                  value={movieQuery}
+                  onChange={handleMoviesSearch}
+                />
+                {filteredMovies.map((c) => (
+                  <li key={c._id}>
+                    <label>
+                      <input
+                        type='checkbox'
+                        name='movie'
+                        value={c._id}
+                        onChange={handleCheckboxforMovies}
+                        checked={selectedMovie.includes(c._id)}
+                      />{' '}
+                      {c.name}
+                    </label>
+                  </li>
+                ))}
+              </div>
             </div>
           </div>
         </div>
         {/* <pre>{JSON.stringify(selectedSeason, null, 2)}</pre> */}
-
+        <input type='submit' />
       </form>
     </div>
   );
