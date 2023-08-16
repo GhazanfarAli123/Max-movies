@@ -3,13 +3,15 @@ import AdminNavbar from './adminNavbar';
 import axios from 'axios';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { useAuth } from '../Context/auth';
 
-const AddSeamov = () => {
+const AddSeaons = () => {
   const [name, setName] = useState("")
   const [category, setCategory] = useState([]);
   const [season, setSeason] = useState([]);
   const [movie, setMovie] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState([]);
+  const [auth] = useAuth();
   const [movieQuery, setMovieQuery] = useState('');
   const [selectedSeason, setSelectedSeason] = useState([]);
   const [selectedSeasonQuery, setSelectedSeasonQuery] = useState("");
@@ -103,16 +105,32 @@ const AddSeamov = () => {
     }
   };
 
-  const handelCreate = async(e) =>{
-    try{
-      const seamov = new FormData()
-      seamov.append("name" , name);
-      
-
-    }catch(err){
+  const handelCreate = async (e) => {
+    try {
+      const seamov = new FormData();
+      seamov.append("name", name);
+      seamov.append("season", selectedSeason); // Use selectedSeason instead of season
+      seamov.append("gerneses", selectedGerneses); // Use selectedGerneses instead of gerneses
+      seamov.append("dateoflaunch", startDate);
+      seamov.append("category", selectedCategories); // Use selectedCategories instead of category
+      seamov.append("description", desc);
+      seamov.append("tags", tagData);
+      seamov.append("photo", photo);
+  
+      const { data } = await axios.post(
+        "http://localhost:1000/api/v1/seamov/create-seamov",
+        seamov,
+        {
+          headers: {
+            "auth-token": auth.token,
+          },
+        }
+      );
+    } catch (err) {
       console.log(err);
     }
-  }
+  };
+  
 
   const handleCheckboxChangefCountry = (event) => {
     const countryId = event.target.value;
@@ -191,35 +209,38 @@ const AddSeamov = () => {
   const resizeImage = (file) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
-
+  
     reader.onload = (e) => {
       const img = new Image();
       img.src = e.target.result;
-
+  
       img.onload = () => {
         const canvas = document.createElement('canvas');
         const MAX_WIDTH = 800; // Maximum width after resizing
         const scaleFactor = MAX_WIDTH / img.width;
-
+  
         canvas.width = MAX_WIDTH;
         canvas.height = img.height * scaleFactor;
-
+  
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
+  
         canvas.toBlob((blob) => {
-          const resizedFile = new File([blob], file.name, { type: 'image/jpeg', lastModified: Date.now() });
+          const resizedFile = new File([blob], file.name.replace(/\.[^/.]+$/, '') + '.webp', {
+            type: 'image/webp',
+            lastModified: Date.now(),
+          });
           setPhoto(resizedFile);
-        }, 'image/jpeg', 0.7); // Compression quality (0.7 = 70%)
+        }, 'image/webp', 0.3); // Compression quality for WebP (0.1 = 10%)
       };
     };
   };
+  
 
 
   return (
     <div className='bg-dark text-white'>
       <AdminNavbar />
-      <form>
         <div className='container'>
           <div className='row'>
             <div className='col-3'>
@@ -383,37 +404,14 @@ const AddSeamov = () => {
                   </li>
                 ))}
               </div>
-              <div className='movies'>
-                <h2>Add Movies</h2>
-                <input
-                  type='text'
-                  placeholder='Search Genres'
-                  value={movieQuery}
-                  onChange={handleMoviesSearch}
-                />
-                {filteredMovies.map((c) => (
-                  <li key={c._id}>
-                    <label>
-                      <input
-                        type='checkbox'
-                        name='movie'
-                        value={c._id}
-                        onChange={handleCheckboxforMovies}
-                        checked={selectedMovie.includes(c._id)}
-                      />{' '}
-                      {c.name}
-                    </label>
-                  </li>
-                ))}
-              </div>
+            
             </div>
           </div>
         </div>
         {/* <pre>{JSON.stringify(selectedSeason, null, 2)}</pre> */}
-        <input type='submit' />
-      </form>
+        <button className='btn btn-primary' onClick={handelCreate}>Add SeaMov</button>
     </div>
   );
 };
 
-export default AddSeamov;
+export default AddSeaons;

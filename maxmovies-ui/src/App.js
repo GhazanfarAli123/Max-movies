@@ -11,7 +11,8 @@ import AddMovie from './Components/AddMovie.js';
 import AddEpisode from './Components/AddEpisode.js';
 import AddSeason from './Components/AddSeason.js';
 import AdminSignUp from './Components/AdminSignUp';
-import AddSeamov from './Components/AddSeamov';
+import Addmovies from './Components/Addmovies';
+import AddSeaons from './Components/AddSeasons';
 
 function App() {
   return (
@@ -28,7 +29,8 @@ function App() {
           <Route path="/admin/dashboard/add-movie" element={<AddMovie />} />
           <Route path="/admin/dashboard/add-episode" element={<AddEpisode />} />
           <Route path="/admin/dashboard/add-season" element={<AddSeason />} />
-          <Route path="/admin/dashboard/add-seamov" element={<AddSeamov />} />
+          <Route path="/admin/dashboard/add-seasons" element={<AddSeaons />} />
+          <Route path="/admin/dashboard/add-movies" element={<Addmovies />} />
         </Route>
       </Routes>
     </Router>
