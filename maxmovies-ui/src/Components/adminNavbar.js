@@ -1,5 +1,6 @@
 
 import React from "react"
+import '../assets/style.css'
 
 function adminNavbar() {
   return (
@@ -35,6 +36,9 @@ function adminNavbar() {
         </li>
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="/admin/dashboard/add-movies">Add movies</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/admin/dashboard/all-movies">All movies</a>
         </li>
        </ul>
     </div>

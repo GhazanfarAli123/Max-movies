@@ -13,6 +13,8 @@ import AddSeason from './Components/AddSeason.js';
 import AdminSignUp from './Components/AdminSignUp';
 import Addmovies from './Components/Addmovies';
 import AddSeaons from './Components/AddSeasons';
+import AllMovies from './Components/AllMovies';
+import EditMovie from './Components/EditMovie';
 
 function App() {
   return (
@@ -31,6 +33,8 @@ function App() {
           <Route path="/admin/dashboard/add-season" element={<AddSeason />} />
           <Route path="/admin/dashboard/add-seasons" element={<AddSeaons />} />
           <Route path="/admin/dashboard/add-movies" element={<Addmovies />} />
+          <Route path="/admin/dashboard/all-movies" element={<AllMovies />} />
+          <Route path="/admin/dashboard/edit-movie/:id" element={<EditMovie />} />
         </Route>
       </Routes>
     </Router>

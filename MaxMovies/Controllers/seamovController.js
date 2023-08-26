@@ -1,6 +1,7 @@
 import slugify from "slugify";
 import seamovmodal from "../Modals/seamovmodal.js";
 import fs from "fs";
+import categorymodal from "../Modals/categorymodal.js";
 
 export const createSeaMov = async (req, res) => {
   try {
@@ -85,6 +86,45 @@ export const getSeaMovSlug = async (req,res) =>{
 
   }
 }
+
+export const getSeaMovid = async (req,res) =>{
+  try{
+
+    
+    const getSeaMov = await seamovmodal.findById(req.params.id).select("-photo")
+
+    res.send(getSeaMov)
+
+  }catch(err){
+    res.send(err);
+
+  }
+}
+
+export const getSeaMovCat = async (req, res) => {
+  try {
+    const categoryName = req.params.category;
+
+    // Find the corresponding category document based on the name
+    const category = await categorymodal.findOne({ name: categoryName });
+
+    if (!category) {
+      return res.status(404).json({ message: 'Category not found' });
+    }
+
+    // Use the found category's ObjectId to query the sea movies
+    const getSeaMov = await seamovmodal.findOne({ category: category._id }).select("-photo");
+
+    if (!getSeaMov) {
+      return res.status(404).json({ message: 'No sea movies found for this category' });
+    }
+
+    res.send(getSeaMov);
+  } catch (err) {
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 
 export const deleteSeaMov = async(req,res) =>{
     try {

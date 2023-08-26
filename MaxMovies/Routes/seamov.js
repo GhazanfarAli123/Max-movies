@@ -1,6 +1,6 @@
 import express from "express"
 import {requireSignIn} from "../middleware/authmiddleware.js"
-import { createSeaMov, deleteSeaMov, getSeaMov, getSeaMovPhoto, getSeaMovSlug, updateSeaMov } from "../Controllers/seamovController.js"
+import { createSeaMov, deleteSeaMov, getSeaMov, getSeaMovCat, getSeaMovPhoto, getSeaMovSlug, getSeaMovid, updateSeaMov } from "../Controllers/seamovController.js"
 import formidable from "express-formidable"
 
 const router = express.Router()
@@ -12,6 +12,10 @@ router.get("/sea-photo/:id",getSeaMovPhoto)
 router.get("/get-seaMovs",getSeaMov)
 
 router.get("/get-seaMov/:slug",getSeaMovSlug)
+
+router.get("/get-seaMovs/:category",getSeaMovCat)
+
+router.get("/get-seaMovis/:id",getSeaMovid)
 
 router.delete("/delete-seamov/:id",requireSignIn,deleteSeaMov)
 

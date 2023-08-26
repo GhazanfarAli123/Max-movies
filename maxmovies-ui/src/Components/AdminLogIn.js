@@ -32,35 +32,42 @@ const AdminLogIn = () => {
 
   return (
     <>
-      <AdminNavbar />
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="email">Email address</label>
-          <input
-            type="email"
-            className="form-control"
-            id="email"
-            name="email"
-            aria-describedby="emailHelp"
-            placeholder="Enter email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+      <div className='container'>
+        <div className='row'>
+          <div className='col-3'></div>
+          <div className='col-6'>
+            <form onSubmit={handleSubmit}>
+              <div className="form-group">
+                <label htmlFor="email">Email address</label>
+                <input
+                  type="email"
+                  className="form-control"
+                  id="email"
+                  name="email"
+                  aria-describedby="emailHelp"
+                  placeholder="Enter email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="password">Password</label>
+                <input
+                  type="password"
+                  className="form-control"
+                  name="password"
+                  id="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+              <button type="submit" className="btn btn-primary">Submit</button>
+            </form>
+          </div>
+          <div className='col-3'></div>
         </div>
-        <div className="form-group">
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            className="form-control"
-            name="password"
-            id="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <button type="submit" className="btn btn-primary">Submit</button>
-      </form>
+      </div>
     </>
   );
 };
