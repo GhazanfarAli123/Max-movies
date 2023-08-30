@@ -9,7 +9,7 @@ const AllMovies = () => {
 
   const getMovie = async () => {
     try {
-      const { data } = await axios.get("http://localhost:1000/api/v1/seamov/get-seaMovs/movie");
+      const { data } = await axios.get("http://localhost:1000/api/v1/seamov/get-seaMovis/Movie");
 
 
       if (data) {
@@ -24,6 +24,23 @@ const AllMovies = () => {
     getMovie();
   }, []);
 
+  const deleteMov = async(id) =>{
+    try{
+      const {data} = await axios.delete(`http://localhost:1000/api/v1/seamov/delete-seamov/${id}`,{
+        headers:{
+          "auth-token":auth.token
+        }
+      })
+      getMovie();
+      console.log(`${data} is deleted`)
+      window.location.reload()
+    }catch(err){
+      console.log(err)
+    }
+  }
+
+
+
   return (
     <>
       <AdminNavbar />
@@ -37,6 +54,7 @@ const AllMovies = () => {
                 <a href={`/admin/dashboard/edit-movie/${movie._id}`}>
                   <button >Edit</button>
                 </a>
+                <button className='danger' onClick={() => deleteMov(movie._id)}>Delete</button>
               </>
             )}
           </div>

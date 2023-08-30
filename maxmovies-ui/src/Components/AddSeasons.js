@@ -216,7 +216,7 @@ const AddSeaons = () => {
   
       img.onload = () => {
         const canvas = document.createElement('canvas');
-        const MAX_WIDTH = 800; // Maximum width after resizing
+        const MAX_WIDTH = 800;
         const scaleFactor = MAX_WIDTH / img.width;
   
         canvas.width = MAX_WIDTH;

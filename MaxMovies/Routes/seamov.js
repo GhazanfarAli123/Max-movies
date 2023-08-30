@@ -13,9 +13,9 @@ router.get("/get-seaMovs",getSeaMov)
 
 router.get("/get-seaMov/:slug",getSeaMovSlug)
 
-router.get("/get-seaMovs/:category",getSeaMovCat)
+router.get("/get-seaMovis/:category",getSeaMovCat)
 
-router.get("/get-seaMovis/:id",getSeaMovid)
+router.get("/get-seaMoviis/:id",getSeaMovid)
 
 router.delete("/delete-seamov/:id",requireSignIn,deleteSeaMov)
 

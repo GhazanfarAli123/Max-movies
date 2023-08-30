@@ -7,31 +7,46 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 const EditMovie = () => {
-    const [movie, setMovie] = useState([])
+    const [movie, setMovie] = useState([]); // Initialize with an empty array
     const [auth] = useAuth("")
     const { id } = useParams();
     const [selectedDate, setSelectedDate] = useState(null);
-    const [category,setCategory] = useState([])
+    const [selectedCategories, setSelectedCategories] = useState([]);
+    const [categories, setCategories] = useState([]); // Updated variable name
+
 
 
     const getMovieData = async () => {
         try {
-            const { data } = await axios.get(`http://localhost:1000/api/v1/seamov/get-seaMovis/${id}`)
-            setMovie(data)
-            setSelectedDate(new Date(data.dateoflaunch));  // Set the selectedDate after movie is fetched
-        } catch (err) {
-            console.log(err)
-        }
-    }
-
-    const getCategory = async (e) => {
-        try {
-            const { data } = await axios.get("http://localhost:1000/api/v1/category/get-category")
-            setCategory(data)
+            const { data } = await axios.get(`http://localhost:1000/api/v1/seamov/get-seaMoviis/${id}`);
+            setMovie(data);
+            setSelectedDate(new Date(data.dateoflaunch));
+            setSelectedCategories(data.category);
         } catch (err) {
             console.log(err);
         }
     }
+
+    const getCategory = async () => {
+        try {
+            const { data } = await axios.get("http://localhost:1000/api/v1/category/get-category")
+            setCategories(data); // Update categories state
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    const handleCheckboxChange = (event) => {
+        const categoryId = event.target.value;
+        const isChecked = event.target.checked;
+
+        if (isChecked) {
+            setSelectedCategories(prevSelected => [...prevSelected, categoryId]);
+        } else {
+            setSelectedCategories(prevSelected => prevSelected.filter(id => id !== categoryId));
+        }
+    };
+
+
 
     useEffect(() => {
         getMovieData();
@@ -50,13 +65,14 @@ const EditMovie = () => {
                         </div>
                         <div className='category-picker'>
                             <h1>Edit Category</h1>
-                            {category.map((cat) => (
+                            {categories.map((cat) => (
                                 <label key={cat._id}>
-                                        <input
+                                    <input
                                         type='checkbox'
-                                        value={cat.name}
-                                        checked={movie.category.includes(cat._id)}  // Check if the category is in the movie's categories
-                                    />                                    
+                                        value={cat._id}
+                                        onChange={handleCheckboxChange}
+                                        checked={selectedCategories.includes(cat._id)}
+                                    />
                                     {cat.name}
                                 </label>
                             ))}
