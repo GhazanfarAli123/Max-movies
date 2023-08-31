@@ -13,6 +13,10 @@ const EditMovie = () => {
     const [selectedDate, setSelectedDate] = useState(null);
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [categories, setCategories] = useState([]); // Updated variable name
+    const [gerneses, setGerneses] = useState([])
+    const [selectedGerneses, setSelectedGerneses] = useState([])
+    const [tagData, setTagData] = useState([]);
+
 
 
 
@@ -22,10 +26,21 @@ const EditMovie = () => {
             setMovie(data);
             setSelectedDate(new Date(data.dateoflaunch));
             setSelectedCategories(data.category);
+            setSelectedGerneses(data.gerneses)
+            setTagData(data.tags)
         } catch (err) {
             console.log(err);
         }
     }
+
+    const get_gernese = async () => {
+        try {
+            const { data } = await axios.get('http://localhost:1000/api/v1/gernse/get-gernse');
+            setGerneses(data);
+        } catch (err) {
+            console.log(err);
+        }
+    };
 
     const getCategory = async () => {
         try {
@@ -35,7 +50,7 @@ const EditMovie = () => {
             console.log(err);
         }
     }
-    const handleCheckboxChange = (event) => {
+    const handleCheckboxChangeCat = (event) => {
         const categoryId = event.target.value;
         const isChecked = event.target.checked;
 
@@ -45,13 +60,38 @@ const EditMovie = () => {
             setSelectedCategories(prevSelected => prevSelected.filter(id => id !== categoryId));
         }
     };
+    const handleCheckboxChangeCgen = (event) => {
+        const gernesesId = event.target.value;
+        const isChecked = event.target.checked;
+
+        if (isChecked) {
+            setSelectedGerneses(prevSelected => [...prevSelected, gernesesId]);
+        } else {
+            setSelectedGerneses(prevSelected => prevSelected.filter(id => id !== gernesesId));
+        }
+    };
 
 
 
     useEffect(() => {
         getMovieData();
         getCategory();
+        get_gernese()
     }, [])
+    
+
+  const removeTagData = (indexToRemove) => {
+    setTagData([...tagData.filter((_, index) => index !== indexToRemove)]);
+  };
+
+  const addTagData = (event) => {
+    if (event.target.value !== '') {
+      setTagData([...tagData, event.target.value]);
+      event.target.value = '';
+    }
+  };
+
+
 
     return (
         <>
@@ -70,12 +110,47 @@ const EditMovie = () => {
                                     <input
                                         type='checkbox'
                                         value={cat._id}
-                                        onChange={handleCheckboxChange}
+                                        onChange={handleCheckboxChangeCat}
                                         checked={selectedCategories.includes(cat._id)}
                                     />
                                     {cat.name}
                                 </label>
                             ))}
+                        </div>
+                        <div className='gerneses-picker'>
+                            <h1>Add Gerneses</h1>
+                            {gerneses.map((gen) => (
+                                <label key={gen._id}>
+                                    <input
+                                        type='checkbox'
+                                        value={gen._id}
+                                        onChange={handleCheckboxChangeCgen}
+                                        checked={selectedGerneses.includes(gen._id)}
+                                    />
+                                    {gen.name}
+                                </label>
+                            ))}
+                        </div>
+                        <h1>Enter Tags</h1>
+                        <div className="tag-input">
+                            <ul className="tags">
+                                {tagData.map((tag, index) => (
+                                    <li key={index} className="tag">
+                                        <span className="tag-title">{tag}</span>
+                                        <span
+                                            className="tag-close-icon"
+                                            onClick={() => removeTagData(index)}
+                                        >
+                                            x
+                                        </span>
+                                    </li>
+                                ))}
+                            </ul>
+                            <input
+                                type="text"
+                                onKeyUp={event => (event.key === 'Enter' ? addTagData(event) : null)}
+                                placeholder="Press enter to add a tag"
+                            />
                         </div>
                     </div>
                 </div>

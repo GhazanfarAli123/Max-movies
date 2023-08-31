@@ -5,7 +5,7 @@ import categorymodal from "../Modals/categorymodal.js";
 
 export const createSeaMov = async (req, res) => {
   try {
-    const { name, movie, season,gerneses, dateoflaunch, category, description, tags } = req.fields;
+    const { name, movie, season, gerneses, dateoflaunch, category, description, tags } = req.fields;
 
     // Check if 'req.files' exists and if 'photo' is present
     if (!req.files || !req.files.photo) {
@@ -35,7 +35,10 @@ export const createSeaMov = async (req, res) => {
         res.send("photo should not be greater than 1000");
         break;
       default:
-        const products = new seamovmodal({ ...req.fields , slug: slugify(name) });
+        // Split the tags string into an array
+        const tagArray = tags.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
+
+        const products = new seamovmodal({ ...req.fields, tags: tagArray, slug: slugify(name) });
         if (photo) {
           products.photo.data = fs.readFileSync(photo.path);
           products.contentType = photo.type;
@@ -49,6 +52,7 @@ export const createSeaMov = async (req, res) => {
     res.send(err);
   }
 };
+
 
 export const getSeaMovPhoto = async (req, res) => {
   try {

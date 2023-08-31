@@ -187,12 +187,14 @@ const AddSeaons = () => {
 
 
   const removeTagData = (indexToRemove) => {
-    setTagData([...tagData.filter((_, index) => index !== indexToRemove)]);
+    setTags(tags.filter((_, index) => index !== indexToRemove));
   };
+  
 
   const addTagData = (event) => {
-    if (event.target.value !== '') {
-      setTagData([...tagData, event.target.value]);
+    const newTag = event.target.value.trim();
+    if (newTag !== '') {
+      setTags([...tagData, newTag]);
       event.target.value = '';
     }
   };
@@ -290,24 +292,25 @@ const AddSeaons = () => {
 
               <h1>Enter Tags</h1>
               <div className="tag-input">
-                <ul className="tags">
-                  {tagData.map((tag, index) => (
-                    <li key={index} className="tag">
-                      <span className="tag-title">{tag}</span>
-                      <span
-                        className="tag-close-icon"
-                        onClick={() => removeTagData(index)}
-                      >
-                        x
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-                <input
-                  type="text"
-                  onKeyUp={event => (event.key === 'Enter' ? addTagData(event) : null)}
-                  placeholder="Press enter to add a tag"
-                />
+              <ul className="tags">
+  {tagData.map((tag, index) => (
+    <li key={index} className="tag">
+      <span className="tag-title">{tag}</span>
+      <span
+        className="tag-close-icon"
+        onClick={() => removeTagData(index)}
+      >
+        x
+      </span>
+    </li>
+  ))}
+</ul>
+<input
+  type="text"
+  onKeyUp={event => (event.key === 'Enter' ? addTagData(event) : null)}
+  placeholder="Press enter to add a tag"
+/>
+
               </div>
               <div className='countries'>
                 <ul>
