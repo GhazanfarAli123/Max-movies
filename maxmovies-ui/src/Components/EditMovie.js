@@ -16,9 +16,8 @@ const EditMovie = () => {
     const [gerneses, setGerneses] = useState([])
     const [selectedGerneses, setSelectedGerneses] = useState([])
     const [tagData, setTagData] = useState([]);
-
-
-
+    const [name , setName] = useState("")
+    const [desc , setDesc] = useState("")
 
     const getMovieData = async () => {
         try {
@@ -28,6 +27,8 @@ const EditMovie = () => {
             setSelectedCategories(data.category);
             setSelectedGerneses(data.gerneses)
             setTagData(data.tags)
+            setName(data.name)
+            setDesc(data.description)
         } catch (err) {
             console.log(err);
         }
@@ -151,6 +152,17 @@ const EditMovie = () => {
                                 onKeyUp={event => (event.key === 'Enter' ? addTagData(event) : null)}
                                 placeholder="Press enter to add a tag"
                             />
+                        </div>
+                    </div>
+                    <div className='col-6'>
+                        <div className='name'>
+                            <h1>Enter Name</h1>
+                            <input type="text" width="100%" value={name}
+                            onChange={(e)=> setName(e.target.value)}/>
+                        </div>
+                        <div className='desc'>
+                            <h1>Enter Description</h1>
+                            <textarea rows="10" cols="50" value={desc} onChange={(e) => setDesc(e.target.value)} />
                         </div>
                     </div>
                 </div>
