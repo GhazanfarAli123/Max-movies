@@ -116,7 +116,7 @@ const AddSeaons = () => {
       seamov.append("description", desc);
       seamov.append("tags", tagData);
       seamov.append("photo", photo);
-  
+
       const { data } = await axios.post(
         "http://localhost:1000/api/v1/seamov/create-seamov",
         seamov,
@@ -130,7 +130,7 @@ const AddSeaons = () => {
       console.log(err);
     }
   };
-  
+
 
   const handleCheckboxChangefCountry = (event) => {
     const countryId = event.target.value;
@@ -189,7 +189,7 @@ const AddSeaons = () => {
   const removeTagData = (indexToRemove) => {
     setTags(tags.filter((_, index) => index !== indexToRemove));
   };
-  
+
 
   const addTagData = (event) => {
     const newTag = event.target.value.trim();
@@ -211,22 +211,22 @@ const AddSeaons = () => {
   const resizeImage = (file) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
-  
+
     reader.onload = (e) => {
       const img = new Image();
       img.src = e.target.result;
-  
+
       img.onload = () => {
         const canvas = document.createElement('canvas');
         const MAX_WIDTH = 800;
         const scaleFactor = MAX_WIDTH / img.width;
-  
+
         canvas.width = MAX_WIDTH;
         canvas.height = img.height * scaleFactor;
-  
+
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-  
+
         canvas.toBlob((blob) => {
           const resizedFile = new File([blob], file.name.replace(/\.[^/.]+$/, '') + '.webp', {
             type: 'image/webp',
@@ -237,182 +237,182 @@ const AddSeaons = () => {
       };
     };
   };
-  
+
 
 
   return (
     <div className='bg-dark text-white'>
       <AdminNavbar />
-        <div className='container'>
-          <div className='row'>
-            <div className='col-3'>
-              <h2>Add Date</h2>
-              <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} />
+      <div className='container'>
+        <div className='row'>
+          <div className='col-3'>
+            <h2>Add Date</h2>
+            <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} />
 
-              <h1>Add category</h1>
-              <ul>
-                {filteredCategory.map((c) => (
-                  <li key={c._id}>
-                    <label>
-                      <input
-                        type='checkbox'
-                        name='category'
-                        value={c._id}
-                        onChange={handleCheckboxChangefCat}
-                        checked={selectedCategories.includes(c._id)}
-                      />{' '}
-                      {c.name}
-                    </label>
-                  </li>
-                ))}
-              </ul>
-              <h1>Add Gerneses</h1>
-              <ul>
-                <input
-                  type='text'
-                  placeholder='Search Genres'
-                  value={gernseSearchQuery}
-                  onChange={handleGernseSearch}
-                />
-                {filteredGerneses.map((c) => (
-                  <li key={c._id}>
-                    <label>
-                      <input
-                        type='checkbox'
-                        name='category'
-                        value={c._id}
-                        onChange={handleCheckboxChangefGernses}
-                        checked={selectedGerneses.includes(c._id)}
-                      />{' '}
-                      {c.name}
-                    </label>
-                  </li>
-                ))}
-              </ul>
+            <h1>Add category</h1>
+            <ul>
+              {filteredCategory.map((c) => (
+                <li key={c._id}>
+                  <label>
+                    <input
+                      type='checkbox'
+                      name='category'
+                      value={c._id}
+                      onChange={handleCheckboxChangefCat}
+                      checked={selectedCategories.includes(c._id)}
+                    />{' '}
+                    {c.name}
+                  </label>
+                </li>
+              ))}
+            </ul>
+            <h1>Add Gerneses</h1>
+            <ul>
+              <input
+                type='text'
+                placeholder='Search Genres'
+                value={gernseSearchQuery}
+                onChange={handleGernseSearch}
+              />
+              {filteredGerneses.map((c) => (
+                <li key={c._id}>
+                  <label>
+                    <input
+                      type='checkbox'
+                      name='category'
+                      value={c._id}
+                      onChange={handleCheckboxChangefGernses}
+                      checked={selectedGerneses.includes(c._id)}
+                    />{' '}
+                    {c.name}
+                  </label>
+                </li>
+              ))}
+            </ul>
 
-              <h1>Enter Tags</h1>
-              <div className="tag-input">
+            <h1>Enter Tags</h1>
+            <div className="tag-input">
               <ul className="tags">
-  {tagData.map((tag, index) => (
-    <li key={index} className="tag">
-      <span className="tag-title">{tag}</span>
-      <span
-        className="tag-close-icon"
-        onClick={() => removeTagData(index)}
-      >
-        x
-      </span>
-    </li>
-  ))}
-</ul>
-<input
-  type="text"
-  onKeyUp={event => (event.key === 'Enter' ? addTagData(event) : null)}
-  placeholder="Press enter to add a tag"
-/>
+                {tagData.map((tag, index) => (
+                  <li key={index} className="tag">
+                    <span className="tag-title">{tag}</span>
+                    <span
+                      className="tag-close-icon"
+                      onClick={() => removeTagData(index)}
+                    >
+                      x
+                    </span>
+                  </li>
+                ))}
+              </ul>
+              <input
+                type="text"
+                onKeyUp={event => (event.key === 'Enter' ? addTagData(event) : null)}
+                placeholder="Press enter to add a tag"
+              />
 
-              </div>
-              <div className='countries'>
-                <ul>
-                  {/* <input
+            </div>
+            <div className='countries'>
+              <ul>
+                {/* <input
                 type='text'
                 placeholder='Search Genres'
                 value={gernseSearchQuery}
                 onChange={handleGernseSearch}
               /> */}
-                  <h1>Add country</h1>
-                  {filteredCountries.map((c) => (
-                    <li key={c._id}>
-                      <label>
-                        <input
-                          type='checkbox'
-                          name='country'
-                          value={c._id}
-                          onChange={handleCheckboxChangefCountry}
-                          checked={selectedCountry.includes(c._id)}
-                        />{' '}
-                        {c.name}
-                      </label>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-            <div className='col-6'>
-              <div className='seaMovName'>
-                <h1>Enter Movie and Season Name</h1>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="exampleInputEmail1"
-                  aria-describedby="emailHelp"
-                  placeholder="Enter Season Name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-              </div>
-              <div className='seaMovDesc'>
-                <h2>Enter Movie and Season Description</h2>
-                <textarea
-                  rows="5"
-                  type="text"
-                  className="form-control"
-                  id="exampleInputEmail1"
-                  aria-describedby="emailHelp"
-                  placeholder="Enter Season Name"
-                  value={desc}
-                  onChange={(e) => setDesc(e.target.value)}
-                />
-              </div>
-              {photo ? (
-                <div className='image'>
-                  <img
-                    src={URL.createObjectURL(photo)}
-                    alt='product_image'
-                    height='200px'
-                    className='img img-responsive'
-                  />
-                </div>
-              ) : (
-                <div>{photo ? photo.name : 'Upload Image'}</div>
-              )}
-              <input
-                type='file'
-                name='photo'
-                accept='image/*'
-                onChange={handleFileChange}
-              />
-            </div>
-            <div className='col-3'>
-              <div className='seasons'>
-                <h2>Add Season</h2>
-                <input
-                  type='text'
-                  placeholder='Search Genres'
-                  value={selectedSeasonQuery}
-                  onChange={handleSeasonSearch}
-                />
-                {filteredSeasons.map((c) => (
+                <h1>Add country</h1>
+                {filteredCountries.map((c) => (
                   <li key={c._id}>
                     <label>
                       <input
                         type='checkbox'
-                        name='season'
+                        name='country'
                         value={c._id}
-                        onChange={handleCheckboxforSeasons}
-                        checked={selectedSeason.includes(c._id)}
+                        onChange={handleCheckboxChangefCountry}
+                        checked={selectedCountry.includes(c._id)}
                       />{' '}
                       {c.name}
                     </label>
                   </li>
                 ))}
-              </div>
-            
+              </ul>
             </div>
           </div>
+          <div className='col-6'>
+            <div className='seaMovName'>
+              <h1>Enter Movie and Season Name</h1>
+              <input
+                type="text"
+                className="form-control"
+                id="exampleInputEmail1"
+                aria-describedby="emailHelp"
+                placeholder="Enter Season Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+            <div className='seaMovDesc'>
+              <h2>Enter Movie and Season Description</h2>
+              <textarea
+                rows="5"
+                type="text"
+                className="form-control"
+                id="exampleInputEmail1"
+                aria-describedby="emailHelp"
+                placeholder="Enter Season Name"
+                value={desc}
+                onChange={(e) => setDesc(e.target.value)}
+              />
+            </div>
+            {photo ? (
+              <div className='image'>
+                <img
+                  src={URL.createObjectURL(photo)}
+                  alt='product_image'
+                  height='200px'
+                  className='img img-responsive'
+                />
+              </div>
+            ) : (
+              <div>{photo ? photo.name : 'Upload Image'}</div>
+            )}
+            <input
+              type='file'
+              name='photo'
+              accept='image/*'
+              onChange={handleFileChange}
+            />
+          </div>
+          <div className='col-3'>
+            <div className='seasons'>
+              <h2>Add Season</h2>
+              <input
+                type='text'
+                placeholder='Search Genres'
+                value={selectedSeasonQuery}
+                onChange={handleSeasonSearch}
+              />
+              {filteredSeasons.map((c) => (
+                <li key={c._id}>
+                  <label>
+                    <input
+                      type='checkbox'
+                      name='season'
+                      value={c._id}
+                      onChange={handleCheckboxforSeasons}
+                      checked={selectedSeason.includes(c._id)}
+                    />{' '}
+                    {c.name}
+                  </label>
+                </li>
+              ))}
+            </div>
+
+          </div>
         </div>
-        {/* <pre>{JSON.stringify(selectedSeason, null, 2)}</pre> */}
-        <button className='btn btn-primary' onClick={handelCreate}>Add SeaMov</button>
+      </div>
+      {/* <pre>{JSON.stringify(selectedSeason, null, 2)}</pre> */}
+      <button className='btn btn-primary' onClick={handelCreate}>Add SeaMov</button>
     </div>
   );
 };

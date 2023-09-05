@@ -117,7 +117,7 @@ export const getSeaMovCat = async (req, res) => {
     }
 
     // Use the found category's ObjectId to query the sea movies
-    const getSeaMov = await seamovmodal.findOne({ category: category._id }).select("-photo");
+    const getSeaMov = await seamovmodal.find({ category: category._id }).select("-photo");
 
     if (!getSeaMov) {
       return res.status(404).json({ message: 'No sea movies found for this category' });

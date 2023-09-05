@@ -7,7 +7,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 const EditMovie = () => {
-    const [movie, setMovie] = useState([]); // Initialize with an empty array
+    const [movies, setMovies] = useState([]); // Initialize with an empty array
     const [auth] = useAuth("")
     const { id } = useParams();
     const [selectedDate, setSelectedDate] = useState(null);
@@ -15,29 +15,35 @@ const EditMovie = () => {
     const [categories, setCategories] = useState([]); // Updated variable name
     const [gerneses, setGerneses] = useState([])
     const [selectedGerneses, setSelectedGerneses] = useState([])
+    const [selectedMovies, setSelectedMovies] = useState([])
     const [tagData, setTagData] = useState([]);
-    const [name , setName] = useState("")
-    const [desc , setDesc] = useState("")
+    const [selectedGernesesQuery, setSelectedGernesesQuery] = useState("");
+    const [name, setName] = useState("")
+    const [desc, setDesc] = useState("")
 
     const getMovieData = async () => {
         try {
             const { data } = await axios.get(`http://localhost:1000/api/v1/seamov/get-seaMoviis/${id}`);
-            setMovie(data);
+            console.log("Data received from API:", data);
+            console.log("Genre IDs from API:", data.gerneses);
+
             setSelectedDate(new Date(data.dateoflaunch));
             setSelectedCategories(data.category);
-            setSelectedGerneses(data.gerneses)
-            setTagData(data.tags)
-            setName(data.name)
-            setDesc(data.description)
+            setSelectedGerneses(data.gerneses);
+            setTagData(data.tags);
+            setName(data.name);
+            setDesc(data.description);
+            setSelectedMovies(data.movie);
         } catch (err) {
             console.log(err);
         }
-    }
+    };
 
     const get_gernese = async () => {
         try {
             const { data } = await axios.get('http://localhost:1000/api/v1/gernse/get-gernse');
             setGerneses(data);
+            console.log(data)
         } catch (err) {
             console.log(err);
         }
@@ -51,6 +57,15 @@ const EditMovie = () => {
             console.log(err);
         }
     }
+    const getMovie = async () => {
+        const { data } = await axios.get("http://localhost:1000/api/v1/movie/get-movies")
+        setMovies(data);
+    }
+
+    const filteredGerneses = gerneses.filter((movie) =>
+        movie.name && movie.name.toLowerCase().includes(selectedGernesesQuery.toLowerCase())
+    );
+
     const handleCheckboxChangeCat = (event) => {
         const categoryId = event.target.value;
         const isChecked = event.target.checked;
@@ -61,14 +76,26 @@ const EditMovie = () => {
             setSelectedCategories(prevSelected => prevSelected.filter(id => id !== categoryId));
         }
     };
-    const handleCheckboxChangeCgen = (event) => {
-        const gernesesId = event.target.value;
+
+
+    const handleCheckboxChangeMov = (event) => {
+        const movId = event.target.value;
         const isChecked = event.target.checked;
 
         if (isChecked) {
-            setSelectedGerneses(prevSelected => [...prevSelected, gernesesId]);
+            setSelectedMovies(prevSelected => [...prevSelected, movId]);
         } else {
-            setSelectedGerneses(prevSelected => prevSelected.filter(id => id !== gernesesId));
+            setSelectedMovies(prevSelected => prevSelected.filter(id => id !== movId));
+        }
+    };
+    const handleCheckboxChangeGen = (event) => {
+        const movId = event.target.value;
+        const isChecked = event.target.checked;
+
+        if (isChecked) {
+            selectedGerneses(prevSelected => [...prevSelected, movId]);
+        } else {
+            selectedGerneses(prevSelected => prevSelected.filter(id => id !== movId));
         }
     };
 
@@ -77,20 +104,23 @@ const EditMovie = () => {
     useEffect(() => {
         getMovieData();
         getCategory();
-        get_gernese()
+        get_gernese();
+        getMovie();
     }, [])
-    
 
-  const removeTagData = (indexToRemove) => {
-    setTagData([...tagData.filter((_, index) => index !== indexToRemove)]);
-  };
+    const handelsearchforgerneses = (event) => {
+        setSelectedGernesesQuery(event.target.value);
+    };
+    const removeTagData = (indexToRemove) => {
+        setTagData([...tagData.filter((_, index) => index !== indexToRemove)]);
+    };
 
-  const addTagData = (event) => {
-    if (event.target.value !== '') {
-      setTagData([...tagData, event.target.value]);
-      event.target.value = '';
-    }
-  };
+    const addTagData = (event) => {
+        if (event.target.value !== '') {
+            setTagData([...tagData, event.target.value]);
+            event.target.value = '';
+        }
+    };
 
 
 
@@ -119,19 +149,25 @@ const EditMovie = () => {
                             ))}
                         </div>
                         <div className='gerneses-picker'>
-                            <h1>Add Gerneses</h1>
-                            {gerneses.map((gen) => (
+                            <h1>Edit Genres</h1>
+                            <input
+                                type='text'
+                                placeholder='Search Genres'
+                                value={selectedGernesesQuery}
+                                onChange={handelsearchforgerneses}
+                            />
+                            {filteredGerneses.map((gen) => (
                                 <label key={gen._id}>
-                                    <input
-                                        type='checkbox'
-                                        value={gen._id}
-                                        onChange={handleCheckboxChangeCgen}
-                                        checked={selectedGerneses.includes(gen._id)}
-                                    />
-                                    {gen.name}
+                                <input
+                                    type='checkbox'
+                                    value={gen._id}
+                                    onChange={handleCheckboxChangeGen}
+                                    checked={selectedGerneses.includes(gen._id)} // Check if the genre ID is in selectedGerneses
+                                />
+                                {gen.name}
                                 </label>
                             ))}
-                        </div>
+                            </div>
                         <h1>Enter Tags</h1>
                         <div className="tag-input">
                             <ul className="tags">
@@ -158,11 +194,27 @@ const EditMovie = () => {
                         <div className='name'>
                             <h1>Enter Name</h1>
                             <input type="text" width="100%" value={name}
-                            onChange={(e)=> setName(e.target.value)}/>
+                                onChange={(e) => setName(e.target.value)} />
                         </div>
                         <div className='desc'>
                             <h1>Enter Description</h1>
-                            <textarea rows="10" cols="50" value={desc} onChange={(e) => setDesc(e.target.value)} />
+                            <textarea rows="10" cols="70" value={desc} onChange={(e) => setDesc(e.target.value)} />
+                        </div>
+                    </div>
+                    <div className='col-3'>
+                        <div className='movie'>
+                            <h1>Edit Movie</h1>
+                            {movies.map((mov) => (
+                                <label key={mov._id}>
+                                    <input
+                                        type='checkbox'
+                                        value={mov._id}
+                                        onChange={handleCheckboxChangeMov}
+                                        checked={selectedMovies.includes(mov._id)}
+                                    />
+                                    {mov.name}
+                                </label>
+                            ))}
                         </div>
                     </div>
                 </div>
