@@ -18,8 +18,11 @@ const EditMovie = () => {
     const [selectedMovies, setSelectedMovies] = useState([])
     const [tagData, setTagData] = useState([]);
     const [selectedGernesesQuery, setSelectedGernesesQuery] = useState("");
+    const [selectedMoviesQuery, setSelectedMoviesQuery] = useState("");
     const [name, setName] = useState("")
     const [desc, setDesc] = useState("")
+    const [photo, setPhoto] = useState("")
+
 
     const getMovieData = async () => {
         try {
@@ -62,8 +65,11 @@ const EditMovie = () => {
         setMovies(data);
     }
 
-    const filteredGerneses = gerneses.filter((movie) =>
-        movie.name && movie.name.toLowerCase().includes(selectedGernesesQuery.toLowerCase())
+    const filteredGerneses = gerneses.filter((gerneses) =>
+        gerneses.name && gerneses.name.toLowerCase().includes(selectedGernesesQuery.toLowerCase())
+    );
+    const filteredMovies = movies.filter((movie) =>
+        movie.name && movie.name.toLowerCase().includes(selectedMoviesQuery.toLowerCase())
     );
 
     const handleCheckboxChangeCat = (event) => {
@@ -88,18 +94,43 @@ const EditMovie = () => {
             setSelectedMovies(prevSelected => prevSelected.filter(id => id !== movId));
         }
     };
+
     const handleCheckboxChangeGen = (event) => {
         const movId = event.target.value;
         const isChecked = event.target.checked;
 
         if (isChecked) {
-            selectedGerneses(prevSelected => [...prevSelected, movId]);
+            setSelectedGerneses(prevSelected => [...prevSelected, movId]);
         } else {
-            selectedGerneses(prevSelected => prevSelected.filter(id => id !== movId));
+            setSelectedGerneses(prevSelected => prevSelected.filter(id => id !== movId));
         }
     };
 
-
+    const seamovUpdate = async() =>{
+        try{
+            const seamov = new FormData();
+            seamov.append("name", name);
+            seamov.append("movie", selectedMovies); // Use selectedSeason instead of season
+            seamov.append("gerneses", selectedGerneses); // Use selectedGerneses instead of gerneses
+            seamov.append("dateoflaunch", selectedDate);
+            seamov.append("category", selectedCategories); // Use selectedCategories instead of category
+            seamov.append("description", desc);
+            seamov.append("tags", tagData);
+            seamov.append("photo", photo);
+            const { data } = await axios.put(
+                `http://localhost:1000/api/v1/seamov/update-seamov/${id}`,
+                seamov,
+                {
+                  headers: {
+                    "auth-token": auth.token,
+                  },
+                }
+              );
+              console.log(data)
+        }catch(err){
+            console.log(err)
+        }
+    }
 
     useEffect(() => {
         getMovieData();
@@ -111,6 +142,9 @@ const EditMovie = () => {
     const handelsearchforgerneses = (event) => {
         setSelectedGernesesQuery(event.target.value);
     };
+    const handelsearchforMovies = (event) => {
+        setSelectedMoviesQuery(event.target.value);
+    };
     const removeTagData = (indexToRemove) => {
         setTagData([...tagData.filter((_, index) => index !== indexToRemove)]);
     };
@@ -121,7 +155,40 @@ const EditMovie = () => {
             event.target.value = '';
         }
     };
-
+    const handleFileChange = (e) => {
+        const selectedFile = e.target.files[0];
+    
+        if (selectedFile) {
+          resizeImage(selectedFile);
+        }
+      };
+    
+      const resizeImage = (file) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+    
+        reader.onload = (e) => {
+          const img = new Image();
+          img.src = e.target.result;
+    
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const MAX_WIDTH = 800; // Maximum width after resizing
+            const scaleFactor = MAX_WIDTH / img.width;
+    
+            canvas.width = MAX_WIDTH;
+            canvas.height = img.height * scaleFactor;
+    
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    
+            canvas.toBlob((blob) => {
+              const resizedFile = new File([blob], file.name, { type: 'image/jpeg', lastModified: Date.now() });
+              setPhoto(resizedFile);
+            }, 'image/jpeg', 0.7); // Compression quality (0.7 = 70%)
+          };
+        };
+      };
 
 
     return (
@@ -200,11 +267,39 @@ const EditMovie = () => {
                             <h1>Enter Description</h1>
                             <textarea rows="10" cols="70" value={desc} onChange={(e) => setDesc(e.target.value)} />
                         </div>
+                        <div className='photo'>
+                        {photo ? (
+                <div className='image'>
+                  <img
+                    src={URL.createObjectURL(photo)}
+                    alt='product_image'
+                    height='200px'
+                    className='img img-responsive'
+                  />
+                </div>
+              ) : (
+                <div>
+                <img height={'200px'}  src={`http://localhost:1000/api/v1/seamov/sea-photo/${id}`} />
+                </div>
+              )}
+              <input
+                type='file'
+                name='photo'
+                accept='image/*'
+                onChange={handleFileChange}
+              />
+                        </div>
                     </div>
                     <div className='col-3'>
                         <div className='movie'>
                             <h1>Edit Movie</h1>
-                            {movies.map((mov) => (
+                            <input
+                                type='text'
+                                placeholder='Search Genres'
+                                value={selectedMoviesQuery}
+                                onChange={handelsearchforMovies}
+                            />
+                            {filteredMovies.map((mov) => (
                                 <label key={mov._id}>
                                     <input
                                         type='checkbox'
@@ -218,6 +313,7 @@ const EditMovie = () => {
                         </div>
                     </div>
                 </div>
+                <button onClick={seamovUpdate}>Update</button>
             </div>
         </>
     )
