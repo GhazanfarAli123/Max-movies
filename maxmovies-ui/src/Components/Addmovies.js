@@ -10,11 +10,7 @@ const Addseaons = () => {
   const [category, setCategory] = useState([]);
   const [season, setSeason] = useState([]);
   const [movie, setMovie] = useState([]);
-  const [selectedMovie, setSelectedMovie] = useState([]);
   const [auth] = useAuth();
-  const [movieQuery, setMovieQuery] = useState('');
-  const [selectedSeason, setSelectedSeason] = useState([]);
-  const [selectedSeasonQuery, setSelectedSeasonQuery] = useState("");
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [gerneses, setGerneses] = useState([]);
@@ -47,14 +43,6 @@ const Addseaons = () => {
     const { data } = await axios.get("http://localhost:1000/api/v1/season/get-season")
     setSeason(data);
   }
-
-  const getMovie = async () => {
-    const { data } = await axios.get("http://localhost:1000/api/v1/movie/get-movies")
-    setMovie(data);
-  }
-
-
-
   const handleCheckboxChangefGernses = (event) => {
     const gernesesId = event.target.value;
     const isChecked = event.target.checked;
@@ -92,24 +80,12 @@ const Addseaons = () => {
       );
     }
   };
-  const handleCheckboxforMovies = (event) => {
-    const moviesId = event.target.value;
-    const isChecked = event.target.checked;
-
-    if (isChecked) {
-      setSelectedMovie((prevSelected) => [...prevSelected, moviesId]);
-    } else {
-      setSelectedMovie((prevSelected) =>
-        prevSelected.filter((id) => id !== moviesId)
-      );
-    }
-  };
 
   const handelCreate = async (e) => {
     try {
       const seamov = new FormData();
       seamov.append("name", name);
-      seamov.append("movie", selectedMovie); // Use selectedSeason instead of season
+      seamov.append("movie", movie); // Use selectedSeason instead of season
       seamov.append("gerneses", selectedGerneses); // Use selectedGerneses instead of gerneses
       seamov.append("dateoflaunch", startDate);
       seamov.append("category", selectedCategories); // Use selectedCategories instead of category
@@ -126,6 +102,7 @@ const Addseaons = () => {
           },
         }
       );
+      console.log(`${name} is added successfully`)
     } catch (err) {
       console.log(err);
     }
@@ -150,21 +127,11 @@ const Addseaons = () => {
     getGerneses();
     getCounty();
     getSeasons();
-    getMovie();
   }, []);
 
-  const handleSearch = (event) => {
-    setSearchQuery(event.target.value);
-  };
+ 
   const handleGernseSearch = (event) => {
     setGernseSearchQuery(event.target.value);
-  };
-
-  const handleSeasonSearch = (event) => {
-    setSelectedSeasonQuery(event.target.value);
-  };
-  const handleMoviesSearch = (event) => {
-    setMovieQuery(event.target.value);
   };
 
   const filteredCountries = country.filter((country) =>
@@ -176,13 +143,6 @@ const Addseaons = () => {
 
   const filteredCategory = category.filter((cat) =>
     cat.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-  const filteredSeasons = season.filter((sea) =>
-    sea.name && sea.name.toLowerCase().includes(selectedSeasonQuery.toLowerCase())
-  );
-
-  const filteredMovies = movie.filter((mov) =>
-    mov.name && mov.name.toLowerCase().includes(movieQuery.toLowerCase())
   );
 
 
@@ -337,7 +297,7 @@ const Addseaons = () => {
             </div>
             <div className='col-6'>
               <div className='seaMovName'>
-                <h1>Enter Movie and Season Name</h1>
+                <h1>Enter Movie name</h1>
                 <input
                   type="text"
                   className="form-control"
@@ -383,26 +343,13 @@ const Addseaons = () => {
             <div className='col-3'>
               <div className='movies'>
                 <h2>Add Movies</h2>
-                <input
+                <textarea
                   type='text'
-                  placeholder='Search Genres'
-                  value={movieQuery}
-                  onChange={handleMoviesSearch}
+                  placeholder='Add Movie'
+                  value={movie}
+                  onChange={(e) => setMovie(e.target.value)}
                 />
-                {filteredMovies.map((c) => (
-                  <li key={c._id}>
-                    <label>
-                      <input
-                        type='checkbox'
-                        name='movie'
-                        value={c._id}
-                        onChange={handleCheckboxforMovies}
-                        checked={selectedMovie.includes(c._id)}
-                      />{' '}
-                      {c.name}
-                    </label>
-                  </li>
-                ))}
+               
               </div>
             </div>
           </div>

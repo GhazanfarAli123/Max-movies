@@ -6,8 +6,7 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
   movie: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "movies"
+    type: String
   },
   season: {
     type: mongoose.Schema.Types.ObjectId,
