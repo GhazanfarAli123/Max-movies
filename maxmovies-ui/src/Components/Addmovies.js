@@ -102,7 +102,7 @@ const Addseaons = () => {
           },
         }
       );
-      console.log(`${name} is added successfully`)
+      alert(`${name} is added successfully`)
     } catch (err) {
       console.log(err);
     }

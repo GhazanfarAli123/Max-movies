@@ -126,6 +126,7 @@ const AddSeaons = () => {
           },
         }
       );
+      alert(`${name} is added`)
     } catch (err) {
       console.log(err);
     }
@@ -185,20 +186,19 @@ const AddSeaons = () => {
     mov.name && mov.name.toLowerCase().includes(movieQuery.toLowerCase())
   );
 
-
   const removeTagData = (indexToRemove) => {
-    setTags(tags.filter((_, index) => index !== indexToRemove));
+    setTagData(tagData.filter((_, index) => index !== indexToRemove));
   };
-
+  
 
   const addTagData = (event) => {
-    const newTag = event.target.value.trim();
-    if (newTag !== '') {
-      setTags([...tagData, newTag]);
+    const newTags = event.target.value.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
+    if (newTags.length > 0) {
+      setTagData([...tagData, ...newTags]);
       event.target.value = '';
     }
   };
-
+  
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];

@@ -15,10 +15,8 @@ const EditMovie = () => {
     const [categories, setCategories] = useState([]); // Updated variable name
     const [gerneses, setGerneses] = useState([])
     const [selectedGerneses, setSelectedGerneses] = useState([])
-    const [selectedMovies, setSelectedMovies] = useState([])
     const [tagData, setTagData] = useState([]);
     const [selectedGernesesQuery, setSelectedGernesesQuery] = useState("");
-    const [selectedMoviesQuery, setSelectedMoviesQuery] = useState("");
     const [name, setName] = useState("")
     const [desc, setDesc] = useState("")
     const [photo, setPhoto] = useState("")
@@ -36,7 +34,7 @@ const EditMovie = () => {
             setTagData(data.tags);
             setName(data.name);
             setDesc(data.description);
-            setSelectedMovies(data.movie);
+            setMovies(data.movie);
         } catch (err) {
             console.log(err);
         }
@@ -60,17 +58,11 @@ const EditMovie = () => {
             console.log(err);
         }
     }
-    const getMovie = async () => {
-        const { data } = await axios.get("http://localhost:1000/api/v1/movie/get-movies")
-        setMovies(data);
-    }
 
     const filteredGerneses = gerneses.filter((gerneses) =>
         gerneses.name && gerneses.name.toLowerCase().includes(selectedGernesesQuery.toLowerCase())
     );
-    const filteredMovies = movies.filter((movie) =>
-        movie.name && movie.name.toLowerCase().includes(selectedMoviesQuery.toLowerCase())
-    );
+
 
     const handleCheckboxChangeCat = (event) => {
         const categoryId = event.target.value;
@@ -84,16 +76,6 @@ const EditMovie = () => {
     };
 
 
-    const handleCheckboxChangeMov = (event) => {
-        const movId = event.target.value;
-        const isChecked = event.target.checked;
-
-        if (isChecked) {
-            setSelectedMovies(prevSelected => [...prevSelected, movId]);
-        } else {
-            setSelectedMovies(prevSelected => prevSelected.filter(id => id !== movId));
-        }
-    };
 
     const handleCheckboxChangeGen = (event) => {
         const movId = event.target.value;
@@ -110,7 +92,7 @@ const EditMovie = () => {
         try{
             const seamov = new FormData();
             seamov.append("name", name);
-            seamov.append("movie", selectedMovies); // Use selectedSeason instead of season
+            seamov.append("movie", movies); // Use selectedSeason instead of season
             seamov.append("gerneses", selectedGerneses); // Use selectedGerneses instead of gerneses
             seamov.append("dateoflaunch", selectedDate);
             seamov.append("category", selectedCategories); // Use selectedCategories instead of category
@@ -126,7 +108,7 @@ const EditMovie = () => {
                   },
                 }
               );
-              console.log(data)
+              alert(`${name} is updated`)
         }catch(err){
             console.log(err)
         }
@@ -136,14 +118,10 @@ const EditMovie = () => {
         getMovieData();
         getCategory();
         get_gernese();
-        getMovie();
     }, [])
 
     const handelsearchforgerneses = (event) => {
         setSelectedGernesesQuery(event.target.value);
-    };
-    const handelsearchforMovies = (event) => {
-        setSelectedMoviesQuery(event.target.value);
     };
     const removeTagData = (indexToRemove) => {
         setTagData([...tagData.filter((_, index) => index !== indexToRemove)]);
@@ -293,23 +271,13 @@ const EditMovie = () => {
                     <div className='col-3'>
                         <div className='movie'>
                             <h1>Edit Movie</h1>
-                            <input
+                            <textarea
                                 type='text'
-                                placeholder='Search Genres'
-                                value={selectedMoviesQuery}
-                                onChange={handelsearchforMovies}
-                            />
-                            {filteredMovies.map((mov) => (
-                                <label key={mov._id}>
-                                    <input
-                                        type='checkbox'
-                                        value={mov._id}
-                                        onChange={handleCheckboxChangeMov}
-                                        checked={selectedMovies.includes(mov._id)}
-                                    />
-                                    {mov.name}
-                                </label>
-                            ))}
+                                placeholder='Add Movie'
+                                value={movies}
+                                onChange={(e) => setMovies(e.target.value)}
+                                />
+                            
                         </div>
                     </div>
                 </div>
