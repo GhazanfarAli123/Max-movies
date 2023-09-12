@@ -24,6 +24,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  imdb: {
+    type: Number,
+    required: true
+  },
   photo: {
     data: Buffer,
     contentType: String

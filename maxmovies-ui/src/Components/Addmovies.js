@@ -21,6 +21,7 @@ const Addseaons = () => {
   const [gernseSearchQuery, setGernseSearchQuery] = useState('')
   const [startDate, setStartDate] = useState(new Date());
   const [desc, setDesc] = useState("")
+  const [imdb, setImdb] = useState("")
   const [photo, setPhoto] = useState("")
 
 
@@ -88,6 +89,7 @@ const Addseaons = () => {
       seamov.append("movie", movie); // Use selectedSeason instead of season
       seamov.append("gerneses", selectedGerneses); // Use selectedGerneses instead of gerneses
       seamov.append("dateoflaunch", startDate);
+      seamov.append("imdb", imdb);
       seamov.append("category", selectedCategories); // Use selectedCategories instead of category
       seamov.append("description", desc);
       seamov.append("tags", tagData);
@@ -292,6 +294,7 @@ const Addseaons = () => {
                       </label>
                     </li>
                   ))}
+                  
                 </ul>
               </div>
             </div>
@@ -351,6 +354,13 @@ const Addseaons = () => {
                 />
                
               </div>
+              <h1>IMDB rating</h1>
+                    <input
+                    type='number'
+                    max="10"
+                    value={imdb}
+                    onChange={(e) => setImdb(e.target.value)}
+                     />
             </div>
           </div>
         </div>

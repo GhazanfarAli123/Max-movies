@@ -19,6 +19,7 @@ const EditMovie = () => {
     const [selectedGernesesQuery, setSelectedGernesesQuery] = useState("");
     const [name, setName] = useState("")
     const [desc, setDesc] = useState("")
+    const [imdb, setImdb] = useState("")
     const [photo, setPhoto] = useState("")
 
 
@@ -95,6 +96,7 @@ const EditMovie = () => {
             seamov.append("movie", movies); // Use selectedSeason instead of season
             seamov.append("gerneses", selectedGerneses); // Use selectedGerneses instead of gerneses
             seamov.append("dateoflaunch", selectedDate);
+            seamov.append("imdb", imdb);
             seamov.append("category", selectedCategories); // Use selectedCategories instead of category
             seamov.append("description", desc);
             seamov.append("tags", tagData);
@@ -279,6 +281,13 @@ const EditMovie = () => {
                                 />
                             
                         </div>
+                        <h1>IMDB rating</h1>
+                    <input
+                    type='number'
+                    max="10"
+                    value={imdb}
+                    onChange={(e) => setImdb(e.target.value)}
+                     />
                     </div>
                 </div>
                 <button onClick={seamovUpdate}>Update</button>

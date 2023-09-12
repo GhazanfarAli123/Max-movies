@@ -26,6 +26,7 @@ const AddSeaons = () => {
   const [startDate, setStartDate] = useState(new Date());
   const [desc, setDesc] = useState("")
   const [photo, setPhoto] = useState("")
+  const [imdb, setImdb] = useState("")
 
 
 
@@ -55,18 +56,18 @@ const AddSeaons = () => {
 
 
 
-  const handleCheckboxChangefGernses = (event) => {
-    const gernesesId = event.target.value;
+  const handleCheckboxChangeGen = (event) => {
+    const genreId = event.target.value;
     const isChecked = event.target.checked;
-
+  
     if (isChecked) {
-      setSelectedGerneses((prevSelected) => [...prevSelected, gernesesId]);
+      setSelectedGerneses((prevSelected) => [...prevSelected, mongoose.Types.ObjectId(genreId)]);
     } else {
-      setSelectedGerneses((prevSelected) =>
-        prevSelected.filter((id) => id !== gernesesId)
-      );
+      setSelectedGerneses((prevSelected) => prevSelected.filter(id => id.toString() !== genreId));
     }
   };
+  
+  
 
   const handleCheckboxChangefCat = (event) => {
     const categoryId = event.target.value;
@@ -112,6 +113,7 @@ const AddSeaons = () => {
       seamov.append("season", selectedSeason); // Use selectedSeason instead of season
       seamov.append("gerneses", selectedGerneses); // Use selectedGerneses instead of gerneses
       seamov.append("dateoflaunch", startDate);
+      seamov.append("imdb", imdb);
       seamov.append("category", selectedCategories); // Use selectedCategories instead of category
       seamov.append("description", desc);
       seamov.append("tags", tagData);
@@ -281,7 +283,7 @@ const AddSeaons = () => {
                       type='checkbox'
                       name='category'
                       value={c._id}
-                      onChange={handleCheckboxChangefGernses}
+                      onChange={handleCheckboxChangeGen}
                       checked={selectedGerneses.includes(c._id)}
                     />{' '}
                     {c.name}
@@ -407,7 +409,12 @@ const AddSeaons = () => {
                 </li>
               ))}
             </div>
-
+            <input
+              type='number'
+              max="10"
+              value={imdb}
+              onChange={(e) => setImdb(e.target.value)}
+                />
           </div>
         </div>
       </div>
