@@ -2,7 +2,10 @@ import slugify from "slugify";
 import seamovmodal from "../Modals/seamovmodal.js";
 import fs from "fs";
 import categorymodal from "../Modals/categorymodal.js";
-import gernse from "../Modals/gernse.js";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import path from 'path'; // Import the path module
+
 
 export const createSeaMov = async (req, res) => {
   try {
@@ -15,7 +18,6 @@ export const createSeaMov = async (req, res) => {
     }
 
     const { photo } = req.files;
-
     switch (true) {
       case !name:
         res.send("name is required");
@@ -38,20 +40,34 @@ export const createSeaMov = async (req, res) => {
       case photo && photo.size > 10000000:
         res.send("photo should not be greater than 1000");
         break;
-      default:
-        // Split the tags string into an array
-        const tagArray = tags.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
-
-        const gernesesarr = gerneses.split(',').map(gerneses => gerneses.trim()).filter(gerneses => gerneses !== '');
-
-        const products = new seamovmodal({ ...req.fields, tags: tagArray, gerneses:gernesesarr, slug: slugify(name) });
-        if (photo) {
-          products.photo.data = fs.readFileSync(photo.path);
-          products.contentType = photo.type;
-        }
-        await products.save();
-        res.send(products);
-        break;
+        default:
+          const tagArray = tags.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
+          const gernesesarr = gerneses.split(',').map(gerneses => gerneses.trim()).filter(gerneses => gerneses !== '');
+  
+          // Generate a unique filename
+          const uniqueFilename = Date.now() + '-' + photo.originalname;
+  
+          // Get the directory path of the current module
+          const currentFileURL = import.meta.url;
+          const currentFilePath = fileURLToPath(currentFileURL);
+          const uploadDir = path.join(dirname(currentFilePath), '../uploads'); // Use path.join with dirname
+  
+          // Create the 'uploads' directory if it doesn't exist
+          if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir);
+          }
+  
+          const imagePath = path.join(uploadDir, uniqueFilename); // Define the path to save the image
+  
+          // Move the uploaded file to the specified path
+          await fs.promises.rename(photo.path, imagePath);
+  
+          // Create a new seamovmodal instance with the image path
+          const products = new seamovmodal({ ...req.fields, tags: tagArray, gerneses: gernesesarr, slug: slugify(name), imagePath: uniqueFilename });
+  
+          await products.save();
+          res.send(products);
+          break;
     }
   } catch (err) {
     console.log(err);
@@ -62,16 +78,25 @@ export const createSeaMov = async (req, res) => {
 
 export const getSeaMovPhoto = async (req, res) => {
   try {
-      const seamovPhoto = await seamovmodal.findById(req.params.id).select("photo");
-      if (seamovPhoto.photo.data) {
-          res.set("Content-Type", seamovPhoto.photo.contentType);
+    const seamov = await seamovmodal.findById(req.params.id);
 
-          res.send(seamovPhoto.photo.data);
-      }
+    if (!seamov) {
+      return res.status(404).json({ message: 'Sea movie not found' });
+    }
+
+    const imagePath = path.join(__dirname, '../uploads', seamov.imagePath);
+    
+    // Set the appropriate Content-Type header for the image
+    const contentType = 'image/jpeg'; // Set the content type based on your image format
+
+    // Send the image as a response
+    res.setHeader('Content-Type', contentType);
+    res.sendFile(imagePath);
   } catch (err) {
-      res.send(err);
+    res.status(500).json({ message: 'Internal server error' });
   }
-}
+};
+
 
 export const getSeaMov = async (req,res) =>{
   try{
