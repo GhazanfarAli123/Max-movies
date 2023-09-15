@@ -50,7 +50,7 @@ export const createSeaMov = async (req, res) => {
           // Get the directory path of the current module
           const currentFileURL = import.meta.url;
           const currentFilePath = fileURLToPath(currentFileURL);
-          const uploadDir = path.join(dirname(currentFilePath), '../uploads'); // Use path.join with dirname
+          const uploadDir = path.join(dirname(currentFilePath), '../uploads'); // Use path.join with dirnames
   
           // Create the 'uploads' directory if it doesn't exist
           if (!fs.existsSync(uploadDir)) {
@@ -70,11 +70,9 @@ export const createSeaMov = async (req, res) => {
           break;
     }
   } catch (err) {
-    console.log(err);
     res.send(err);
   }
 };
-
 
 export const getSeaMovPhoto = async (req, res) => {
   try {
@@ -84,18 +82,31 @@ export const getSeaMovPhoto = async (req, res) => {
       return res.status(404).json({ message: 'Sea movie not found' });
     }
 
-    const imagePath = path.join(__dirname, '../uploads', seamov.imagePath);
-    
-    // Set the appropriate Content-Type header for the image
-    const contentType = 'image/jpeg'; // Set the content type based on your image format
+    // Use import.meta.url to get the current module's URL
+    const currentFileURL = import.meta.url;
+
+    // Convert the module's URL to a file path
+    const currentFilePath = fileURLToPath(currentFileURL);
+
+    // Derive the directory name from the file path
+    const directoryName = dirname(currentFilePath);
+
+    console.log('Directory Name:', directoryName); // Log the directory name for debugging
+
+    const imagePath = path.join(directoryName, '../uploads', seamov.imagePath);
+    const contentType = 'image/jpeg';
+
 
     // Send the image as a response
     res.setHeader('Content-Type', contentType);
     res.sendFile(imagePath);
   } catch (err) {
     res.status(500).json({ message: 'Internal server error' });
+
   }
 };
+
+
 
 
 export const getSeaMov = async (req,res) =>{
