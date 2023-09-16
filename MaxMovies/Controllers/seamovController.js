@@ -172,73 +172,90 @@ export const getSeaMovCat = async (req, res) => {
 };
 
 
-export const deleteSeaMov = async(req,res) =>{
-    try {
-        const seaMov = await seamovmodal.findByIdAndDelete(req.params.id).select("-photo");
-        res.send(seaMov)
-    } catch (err) {
-        res.send(err);
-        console.log(err)
+export const deleteSeaMov = async (req, res) => {
+  try {
+    // Find the sea movie by its ID and delete it
+    const deletedSeaMov = await seamovmodal.findByIdAndDelete(req.params.id);
+
+    if (!deletedSeaMov) {
+      return res.status(404).json({ message: 'Sea movie not found' });
     }
 
-}
+    // Check if the sea movie had an associated image (defined by `imagePath`)
+    if (deletedSeaMov.imagePath) {
+      // Use import.meta.url to get the current module's URL
+      const currentFileURL = import.meta.url;
+
+      // Convert the module's URL to a file path
+      const currentFilePath = fileURLToPath(currentFileURL);
+
+      // Derive the directory name from the file path
+      const directoryName = dirname(currentFilePath);
+
+      const imagePath = path.join(directoryName, '../uploads', deletedSeaMov.imagePath);
+
+      // Check if the image file exists before attempting to delete it
+      if (fs.existsSync(imagePath)) {
+        // Delete the associated image file
+        await fs.promises.unlink(imagePath);
+      }
+    }
+
+    res.send(deletedSeaMov);
+  } catch (err) {
+    console.log(err);
+    res.send(err);
+  }
+};
+
+
 
 export const updateSeaMov = async (req, res) => {
   try {
-    const { name,gerneses, movie, season, dateoflaunch, category, description, tags } = req.fields;
+    const { name, gerneses, movie, season, dateoflaunch, category, description, tags } = req.fields;
     const { photo } = req.files;
 
-    const errors = [];
-
-    if (!name) {
-      errors.push("Name is required");
-    }
-
-    if (!description) {
-      errors.push("Description is required");
-    }
-
-    if (!gerneses) {
-      errors.push("Gernese is required");
-    }
-
-    if (!dateoflaunch) {
-      errors.push("Date of launch is required");
-    }
-
-    if (!category) {
-      errors.push("Category is required");
-    }
-
+    // Check if 'req.files' exists and if 'photo' is present
     if (photo && photo.size > 10000000) {
-      errors.push("Photo is required and it should not be greater than 1000");
+      return res.send("Photo should not be greater than 1000");
     }
 
-    if (errors.length > 0) {
-      return res.send(errors.join(", "));
+    // Find the existing sea movie by ID
+    const existingSeaMov = await seamovmodal.findById(req.params.id);
+
+    if (!existingSeaMov) {
+      return res.status(404).json({ message: 'Sea movie not found' });
     }
 
-    const product = await seamovmodal.findByIdAndUpdate(
-      req.params.id,
-      { ...req.fields, slug: slugify(name) },
-      { new: true }
-    );
+    // Update the sea movie fields with the new values
+    existingSeaMov.name = name || existingSeaMov.name;
+    existingSeaMov.gerneses = gerneses || existingSeaMov.gerneses;
+    existingSeaMov.movie = movie || existingSeaMov.movie;
+    existingSeaMov.season = season || existingSeaMov.season;
+    existingSeaMov.dateoflaunch = dateoflaunch || existingSeaMov.dateoflaunch;
+    existingSeaMov.category = category || existingSeaMov.category;
+    existingSeaMov.description = description || existingSeaMov.description;
+    existingSeaMov.tags = tags ? tags.split(',').map(tag => tag.trim()).filter(tag => tag !== '') : existingSeaMov.tags;
 
-    if (!product) {
-      console.log(`Could not find product with ID ${req.params.id}`);
-      return res.send(`Could not find product with ID ${req.params.id}`);
-    }
-
+    // If a new photo is uploaded, update the imagePath
     if (photo) {
-      product.photo.data = fs.readFileSync(photo.path);
-      product.contentType = photo.type;
+      const uniqueFilename = Date.now() + '-' + photo.originalname;
+      const currentFileURL = import.meta.url;
+      const currentFilePath = fileURLToPath(currentFileURL);
+      const uploadDir = path.join(dirname(currentFilePath), '../uploads');
+      const imagePath = path.join(uploadDir, uniqueFilename);
+
+      // Move the uploaded file to the specified path
+      await fs.promises.rename(photo.path, imagePath);
+
+      existingSeaMov.imagePath = uniqueFilename;
     }
 
-    await product.save();
+    // Save the updated sea movie
+    await existingSeaMov.save();
 
-    res.send(product);
+    res.send(existingSeaMov);
   } catch (err) {
-    console.log(err);
     res.send(err);
   }
 };

@@ -36,6 +36,7 @@ const EditMovie = () => {
             setName(data.name);
             setDesc(data.description);
             setMovies(data.movie);
+            setImdb(data.imdb)
         } catch (err) {
             console.log(err);
         }
@@ -257,7 +258,7 @@ const EditMovie = () => {
                     className='img img-responsive'
                   />
                 </div>
-              ) : (
+              ) : ( 
                 <div>
                 <img height={'200px'}  src={`http://localhost:1000/api/v1/seamov/sea-photo/${id}`} />
                 </div>
