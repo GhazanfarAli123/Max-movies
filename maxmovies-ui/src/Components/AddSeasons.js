@@ -61,9 +61,11 @@ const AddSeaons = () => {
     const isChecked = event.target.checked;
   
     if (isChecked) {
-      setSelectedGerneses((prevSelected) => [...prevSelected, mongoose.Types.ObjectId(genreId)]);
+      setSelectedGerneses((prevSelected) => [...prevSelected, genreId]);
     } else {
-      setSelectedGerneses((prevSelected) => prevSelected.filter(id => id.toString() !== genreId));
+      setSelectedGerneses((prevSelected) =>
+        prevSelected.filter((id) => id !== genreId)
+      );
     }
   };
   
@@ -93,18 +95,7 @@ const AddSeaons = () => {
       );
     }
   };
-  const handleCheckboxforMovies = (event) => {
-    const moviesId = event.target.value;
-    const isChecked = event.target.checked;
 
-    if (isChecked) {
-      setSelectedMovie((prevSelected) => [...prevSelected, moviesId]);
-    } else {
-      setSelectedMovie((prevSelected) =>
-        prevSelected.filter((id) => id !== moviesId)
-      );
-    }
-  };
 
   const handelCreate = async (e) => {
     try {

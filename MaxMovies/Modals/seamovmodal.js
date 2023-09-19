@@ -8,10 +8,10 @@ const userSchema = new mongoose.Schema({
   movie: {
     type: String
   },
-  season: {
+  season: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "seasons"
-  },
+  }],
   countries: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "countries"

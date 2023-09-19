@@ -20,7 +20,7 @@ const AddSeason = () => {
     const handleShow = () => setShow(true);
 
     const handleSubmit = async (e) => {
-        // e.preventDefault();
+        e.preventDefault();
         try {
             const { data } = await axios.post(
                 'http://localhost:1000/api/v1/season/create-season',

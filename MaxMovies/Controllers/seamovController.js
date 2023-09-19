@@ -43,6 +43,7 @@ export const createSeaMov = async (req, res) => {
         default:
           const tagArray = tags.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
           const gernesesarr = gerneses.split(',').map(gerneses => gerneses.trim()).filter(gerneses => gerneses !== '');
+          const seasons = season.split(',').map(season => season.trim()).filter(season => season !== '');
   
           // Generate a unique filename
           const uniqueFilename = Date.now() + '-' + photo.originalname;
@@ -63,7 +64,7 @@ export const createSeaMov = async (req, res) => {
           await fs.promises.rename(photo.path, imagePath);
   
           // Create a new seamovmodal instance with the image path
-          const products = new seamovmodal({ ...req.fields, tags: tagArray, gerneses: gernesesarr, slug: slugify(name), imagePath: uniqueFilename });
+          const products = new seamovmodal({ ...req.fields, tags: tagArray,season:seasons, gerneses: gernesesarr, slug: slugify(name), imagePath: uniqueFilename });
   
           await products.save();
           res.send(products);
