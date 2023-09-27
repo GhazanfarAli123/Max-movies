@@ -64,7 +64,7 @@ export const createSeaMov = async (req, res) => {
           await fs.promises.rename(photo.path, imagePath);
   
           // Create a new seamovmodal instance with the image path
-          const products = new seamovmodal({ ...req.fields, tags: tagArray,season:seasons, gerneses: gernesesarr, slug: slugify(name), imagePath: uniqueFilename });
+          const products = new seamovmodal({ ...req.fields, tags: tagArray,season:season, gerneses: gernesesarr, slug: slugify(name), imagePath: uniqueFilename });
   
           await products.save();
           res.send(products);
@@ -260,3 +260,36 @@ export const updateSeaMov = async (req, res) => {
     res.send(err);
   }
 };
+
+export const seamovCount = async(req , res) =>{
+try{
+  const total = await seamovmodal.find({}).estimatedDocumentCount()
+  res.status(200).send({
+    total
+  })
+}catch(err){
+  console.log(err)
+}
+}
+
+export const searchSeamov = async(req , res) =>{
+  try{
+    const {keyword , category} = req.params
+    const result = await seamovmodal.find({
+      $and:[
+        {
+          $or:[
+            {name : {$regex:keyword,$options:"i"}},
+            {description : {$regex:keyword,$options:"i"}}
+          ]
+        },
+        {category:category}
+      ]
+    })
+    .select("-imagePath")
+    res.json(result)
+
+  }catch(err){
+    console.log(err)
+  }
+}

@@ -2,7 +2,10 @@
 import React from "react"
 import '../assets/style.css'
 
-function adminNavbar() {
+function adminNavbar({categoryId}) {
+
+  console.log(categoryId)
+
   return (
    <>
         <nav class="navbar navbar-expand-lg bg-body-tertiary">

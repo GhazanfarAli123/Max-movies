@@ -16,6 +16,7 @@ import AllMovies from './Components/AllMovies';
 import EditMovie from './Components/EditMovie';
 import AllSeaons from './Components/AllSeaons';
 import EditSeason from './Components/EditSeason';
+import { SearchResutlAdmin } from './Components/SearchResutlAdmin';
 
 function App() {
   return (
@@ -26,7 +27,7 @@ function App() {
           <Route path="admin" element={<AdminLogIn />} />
         <Route path="admin" element={<AdminRoute />}>
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
-          <Route path="/admin/dashboard/add-category" element={<AddCategory />} />
+          <Route path="/admin/dashboard/search/:keyword/:category" element={<SearchResutlAdmin />} />
           <Route path="/admin/dashboard/add-gerneses" element={<AddGerneses />} />
           <Route path="/admin/dashboard/add-country" element={<AddCountry />} />
           <Route path="/admin/dashboard/add-episode" element={<AddEpisode />} />

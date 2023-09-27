@@ -39,11 +39,9 @@ const AllMovies = () => {
     }
   }
 
-
-
   return (
     <>
-      <AdminNavbar />
+      <AdminNavbar categoryId={"64edb0497d933d18aea0b2f4"}/>
       <div className='container'>
         <div className='row'>
           <div className='col-12'>
