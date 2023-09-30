@@ -237,6 +237,7 @@ export const updateSeaMov = async (req, res) => {
     existingSeaMov.category = category || existingSeaMov.category;
     existingSeaMov.description = description || existingSeaMov.description;
     existingSeaMov.tags = tags ? tags.split(',').map(tag => tag.trim()).filter(tag => tag !== '') : existingSeaMov.tags;
+    existingSeaMov.gerneses = gerneses ? gerneses.split(',').map(gerneses => gerneses.trim()).filter(gerneses => gerneses !== '') : existingSeaMov.gerneses;
 
     // If a new photo is uploaded, update the imagePath
     if (photo) {
@@ -287,7 +288,7 @@ export const searchSeamov = async(req , res) =>{
       ]
     })
     .select("-imagePath")
-    res.json(result)
+    res.send(result)
 
   }catch(err){
     console.log(err)

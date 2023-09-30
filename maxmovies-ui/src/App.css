@@ -11,3 +11,7 @@ ul{
 .allmovie{
   display: flex !important;
 }
+
+.form-inline{
+  display: flex !important;
+}

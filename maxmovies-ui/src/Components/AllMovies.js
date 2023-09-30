@@ -6,12 +6,14 @@ import AdminNavbar from './adminNavbar';
 const AllMovies = () => {
   const [movie, setMovie] = useState([]);
   const [auth] = useAuth('');
+  const [cat,setCat] = useState('')
 
   const getMovie = async () => {
     try {
       const { data } = await axios.get("http://localhost:1000/api/v1/seamov/get-seaMovis/Movie");
       setMovie(data)
       console.log(data)
+      setCat(data[0].category)
       if (data) {
         setMovie(data);
       }
@@ -41,7 +43,7 @@ const AllMovies = () => {
 
   return (
     <>
-      <AdminNavbar categoryId={"64edb0497d933d18aea0b2f4"}/>
+      <AdminNavbar categoryId={cat}/>
       <div className='container'>
         <div className='row'>
           <div className='col-12'>

@@ -13,15 +13,12 @@
       try {
         const { data } = await axios.get('http://localhost:1000/api/v1/seamov/get-seaMovis/Season');
         setSeason(data);
-        if (Array.isArray(data) && data.length > 0) {
-          setid(data[0]._id);
-        } else {
-          setid(''); // Set id to an empty string if data is empty or not an array
-        }
+        setid(data[0].category)
       } catch (err) {
         console.log(err);
       }
     };
+    console.log(id)
 
     const deleteSea = async (id) => {
       try {
