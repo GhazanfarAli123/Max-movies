@@ -104,12 +104,13 @@ const AddSeaons = () => {
       seamov.append("season", selectedSeason); // Use selectedSeason instead of season
       seamov.append("gerneses", selectedGerneses); // Use selectedGerneses instead of gerneses
       seamov.append("dateoflaunch", startDate);
+      seamov.append("countries", selectedCountry); // Use selectedCountry instead of country
       seamov.append("imdb", imdb);
       seamov.append("category", selectedCategories); // Use selectedCategories instead of category
       seamov.append("description", desc);
       seamov.append("tags", tagData);
       seamov.append("photo", photo);
-
+  
       const { data } = await axios.post(
         "http://localhost:1000/api/v1/seamov/create-seamov",
         seamov,
@@ -124,7 +125,7 @@ const AddSeaons = () => {
       console.log(err);
     }
   };
-
+  
 
   const handleCheckboxChangefCountry = (event) => {
     const countryId = event.target.value;
@@ -173,10 +174,6 @@ const AddSeaons = () => {
   );
   const filteredSeasons = season.filter((sea) =>
     sea.name && sea.name.toLowerCase().includes(selectedSeasonQuery.toLowerCase())
-  );
-
-  const filteredMovies = movie.filter((mov) =>
-    mov.name && mov.name.toLowerCase().includes(movieQuery.toLowerCase())
   );
 
   const removeTagData = (indexToRemove) => {
@@ -230,6 +227,7 @@ const AddSeaons = () => {
       };
     };
   };
+  console.log(selectedCountry)
 
 
 

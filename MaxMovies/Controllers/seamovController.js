@@ -4,74 +4,74 @@ import fs from "fs";
 import categorymodal from "../Modals/categorymodal.js";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import path from 'path'; // Import the path module
+import path from 'path'; 
+
 
 
 export const createSeaMov = async (req, res) => {
   try {
-    const { name, movie, season, gerneses, dateoflaunch, imdb , category, description, tags } = req.fields;
+    const { name, movie, season, gerneses, dateoflaunch, imdb, category, description, tags, countries } = req.fields;
 
-    // Check if 'req.files' exists and if 'photo' is present
     if (!req.files || !req.files.photo) {
-      res.send("photo is required");
-      return;
+      return res.status(400).send("photo is required");
     }
 
     const { photo } = req.files;
-    switch (true) {
-      case !name:
-        res.send("name is required");
-        break;
-      case !description:
-        res.send("description is required");
-        break;
-      case !gerneses:
-        res.send("gerneses is required");
-        break;
-      case !category:
-        res.send("category is required");
-        break;
-      case !imdb:
-        res.send("imdb rating is required");
-        break;
-      case !photo:
-        res.send("photo is required");
-        break;
-      case photo && photo.size > 10000000:
-        res.send("photo should not be greater than 1000");
-        break;
-        default:
-          const tagArray = tags.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
-          const gernesesarr = gerneses.split(',').map(gerneses => gerneses.trim()).filter(gerneses => gerneses !== '');
-          const seasons = season.split(',').map(season => season.trim()).filter(season => season !== '');
-  
-          // Generate a unique filename
-          const uniqueFilename = Date.now() + '-' + photo.originalname;
-  
-          // Get the directory path of the current module
-          const currentFileURL = import.meta.url;
-          const currentFilePath = fileURLToPath(currentFileURL);
-          const uploadDir = path.join(dirname(currentFilePath), '../uploads'); // Use path.join with dirnames
-  
-          // Create the 'uploads' directory if it doesn't exist
-          if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir);
-          }
-  
-          const imagePath = path.join(uploadDir, uniqueFilename); // Define the path to save the image
-  
-          // Move the uploaded file to the specified path
-          await fs.promises.rename(photo.path, imagePath);
-  
-          // Create a new seamovmodal instance with the image path
-          const products = new seamovmodal({ ...req.fields, tags: tagArray,season:season, gerneses: gernesesarr, slug: slugify(name), imagePath: uniqueFilename });
-  
-          await products.save();
-          res.send(products);
-          break;
+
+    if (!name || !description || !gerneses || !category || !imdb || !countries) {
+      return res.status(400).send("Please fill in all required fields.");
     }
+
+    if (photo.size > 10000000) {
+      return res.status(400).send("photo should not be greater than 1000");
+    }
+
+    const tagArray = tags.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
+    const gernesesarr = gerneses.split(',').map(gerneses => gerneses.trim()).filter(gerneses => gerneses !== '');
+    const seasonsArray = season.split(',').map(season => season.trim()).filter(season => season !== '');
+
+    // Check if 'seasonsArray' is empty and set it to null if it is
+    const seasonValue = seasonsArray.length > 0 ? seasonsArray : null;
+
+    // Generate a unique filename
+    const uniqueFilename = Date.now() + '-' + name;
+
+    // Get the directory path of the current module
+    const currentFileURL = import.meta.url;
+    const currentFilePath = fileURLToPath(currentFileURL);
+    const uploadDir = path.join(path.dirname(currentFilePath), '../uploads'); // Use path.join with dirnames
+
+    // Create the 'uploads' directory if it doesn't exist
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir);
+    }
+
+    const imagePath = path.join(uploadDir, uniqueFilename); // Define the path to save the image
+
+    // Move the uploaded file to the specified path
+    await fs.promises.rename(photo.path, imagePath);
+
+    // Create a new seamovmodal instance with the image path
+    const seamov = new seamovmodal({
+      name,
+      movie,
+      season: seasonValue,
+      gerneses: gernesesarr,
+      dateoflaunch,
+      imdb,
+      category,
+      description,
+      tags: tagArray,
+      countries,
+      slug: slugify(name),
+      imagePath: uniqueFilename,
+    });
+
+    await seamov.save();
+    res.status(201).send(seamov);
   } catch (err) {
-    res.send(err);
+    console.error(err);
+    res.status(500).send("Internal Server Error");
   }
 };
 
@@ -288,6 +288,7 @@ export const searchSeamov = async(req , res) =>{
       ]
     })
     .select("-imagePath")
+    console.log(result)
     res.send(result)
 
   }catch(err){

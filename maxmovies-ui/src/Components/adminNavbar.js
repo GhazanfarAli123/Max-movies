@@ -10,7 +10,7 @@ function adminNavbar({ categoryId }) {
     e.preventDefault()
      const url = `/admin/dashboard/search/${search}/${categoryId}`;
      console.log(url)
-     window.open(url)
+     window.open(url,'_self')
   }
 
   return (
@@ -46,6 +46,9 @@ function adminNavbar({ categoryId }) {
               </li>
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="/admin/dashboard/all-movies">All movies</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/admin/dashboard/all-seasons">All Seasons</a>
               </li>
             </ul>
             <form class="form-inline my-2 my-lg-0">

@@ -17,6 +17,8 @@ const EditMovie = () => {
     const [selectedGerneses, setSelectedGerneses] = useState([])
     const [tagData, setTagData] = useState([]);
     const [selectedGernesesQuery, setSelectedGernesesQuery] = useState("");
+    const [countries, setCountry] = useState([])
+    const [selectedCountries, setSelectedCounties] = useState([])
     const [name, setName] = useState("")
     const [desc, setDesc] = useState("")
     const [imdb, setImdb] = useState("")
@@ -37,6 +39,7 @@ const EditMovie = () => {
             setDesc(data.description);
             setMovies(data.movie);
             setImdb(data.imdb)
+            setCountry(data.countries)
         } catch (err) {
             console.log(err);
         }
@@ -51,6 +54,11 @@ const EditMovie = () => {
             console.log(err);
         }
     };
+    const getCounty = async () => {
+        const { data } = await axios.get('http://localhost:1000/api/v1/country/get-country');
+        setCountry(data);
+      };
+    
 
     const getCategory = async () => {
         try {
@@ -65,6 +73,10 @@ const EditMovie = () => {
         gerneses.name && gerneses.name.toLowerCase().includes(selectedGernesesQuery.toLowerCase())
     );
 
+    const filteredCountry = countries.filter((countries) =>
+    countries.name && countries.name.toLowerCase().includes(selectedCountries.toLowerCase())
+    );
+
 
     const handleCheckboxChangeCat = (event) => {
         const categoryId = event.target.value;
@@ -77,7 +89,16 @@ const EditMovie = () => {
         }
     };
 
+    const handleCheckboxChangeCountry = (event) => {
+        const countryId = event.target.value;
+        const isChecked = event.target.checked;
 
+        if (isChecked) {
+            setSelectedCounties(prevSelected => [...prevSelected, countryId]);
+        } else {
+            setSelectedCounties(prevSelected => prevSelected.filter(id => id !== countryId));
+        }
+    };
 
     const handleCheckboxChangeGen = (event) => {
         const movId = event.target.value;
@@ -121,6 +142,7 @@ const EditMovie = () => {
         getMovieData();
         getCategory();
         get_gernese();
+        getCounty();
     }, [])
 
     const handelsearchforgerneses = (event) => {
@@ -237,6 +259,21 @@ const EditMovie = () => {
                                 placeholder="Press enter to add a tag"
                             />
                         </div>
+                        <h1>Add country</h1>
+                  {filteredCountry.map((c) => (
+                    <li key={c._id}>
+                      <label>
+                        <input
+                          type='checkbox'
+                          name='country'
+                          value={c._id}
+                          onChange={handleCheckboxChangeCountry}
+                          checked={selectedCountries.includes(c._id)}
+                        />{' '}
+                        {c.name}
+                      </label>
+                    </li>
+                  ))}
                     </div>
                     <div className='col-6'>
                         <div className='name'>
@@ -246,7 +283,7 @@ const EditMovie = () => {
                         </div>
                         <div className='desc'>
                             <h1>Enter Description</h1>
-                            <textarea rows="10" cols="70" value={desc} onChange={(e) => setDesc(e.target.value)} />
+                            <textarea rows="10" cols="50" value={desc} onChange={(e) => setDesc(e.target.value)} />
                         </div>
                         <div className='photo'>
                         {photo ? (
