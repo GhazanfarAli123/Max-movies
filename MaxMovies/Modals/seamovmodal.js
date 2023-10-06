@@ -12,10 +12,10 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "seasons"
   }],
-  countries: {
+  countries: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "countries"
-  },
+  }],
   category: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "categories"
