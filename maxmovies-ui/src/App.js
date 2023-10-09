@@ -28,6 +28,7 @@ function App() {
         <Route path="admin" element={<AdminRoute />}>
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/admin/dashboard/search/:keyword/:category" element={<SearchResultAdmin />} />
+          <Route path="/admin/dashboard/add-category" element={<AddCategoryrs />} />
           <Route path="/admin/dashboard/add-gerneses" element={<AddGerneses />} />
           <Route path="/admin/dashboard/add-country" element={<AddCountry />} />
           <Route path="/admin/dashboard/add-episode" element={<AddEpisode />} />

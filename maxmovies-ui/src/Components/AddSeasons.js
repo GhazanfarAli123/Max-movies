@@ -312,7 +312,7 @@ const AddSeaons = () => {
                 onChange={handleGernseSearch}
               /> */}
                 <h1>Add country</h1>
-                {filteredCountries.map((c) => (
+                {country.map((c) => (
                   <li key={c._id}>
                     <label>
                       <input

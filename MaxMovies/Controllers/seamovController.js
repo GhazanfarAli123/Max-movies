@@ -238,6 +238,7 @@ export const updateSeaMov = async (req, res) => {
     existingSeaMov.description = description || existingSeaMov.description;
     existingSeaMov.tags = tags ? tags.split(',').map(tag => tag.trim()).filter(tag => tag !== '') : existingSeaMov.tags;
     existingSeaMov.gerneses = gerneses ? gerneses.split(',').map(gerneses => gerneses.trim()).filter(gerneses => gerneses !== '') : existingSeaMov.gerneses;
+    existingSeaMov.season = season ? season.split(',').map(season => season.trim()).filter(season => season !== '') : existingSeaMov.season;
 
     // If a new photo is uploaded, update the imagePath
     if (photo) {

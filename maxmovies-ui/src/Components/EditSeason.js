@@ -17,9 +17,11 @@ const EditSeason = () => {
   const [selectedGerneses, setSelectedGerneses] = useState([])
   const [tagData, setTagData] = useState([]);
   const [season, setSeason] = useState([]);
+  const [selectedCountries, setSelectedCounties] = useState([]);
   const [selectedSeason, setSelectedSeason] = useState([]);
   const [selectedSeasonQuery, setSelectedSeasonQuery] = useState("");
   const [selectedGernesesQuery, setSelectedGernesesQuery] = useState("");
+  const [country, setCountry] = useState([])
   const [name, setName] = useState("")
   const [desc, setDesc] = useState("")
   const [imdb, setImdb] = useState("")
@@ -36,6 +38,7 @@ const EditSeason = () => {
       setSelectedSeason(data.season)
       setSelectedCategories(data.category);
       setSelectedGerneses(data.gerneses);
+      setSelectedCounties(data.countries)
       setTagData(data.tags);
       setName(data.name);
       setDesc(data.description);
@@ -55,7 +58,14 @@ const EditSeason = () => {
       console.log(err);
     }
   };
-
+  const getCounty = async () => {
+    try{
+    const { data } = await axios.get('http://localhost:1000/api/v1/country/get-country');
+    setCountry(data);
+    }catch(err){
+        console.log(err)
+    }
+};
   const getSeasons = async () => {
     const { data } = await axios.get("http://localhost:1000/api/v1/season/get-season")
     setSeason(data);
@@ -100,7 +110,16 @@ const EditSeason = () => {
     }
   };
 
+  const handleCheckboxChangeCountry = (event) => {
+    const countryId = event.target.value;
+    const isChecked = event.target.checked;
 
+    if (isChecked) {
+        setSelectedCounties(prevSelected => [...prevSelected, countryId]);
+    } else {
+        setSelectedCounties(prevSelected => prevSelected.filter(id => id !== countryId));
+    }
+};
 
   const handleCheckboxChangeGen = (event) => {
     const movId = event.target.value;
@@ -129,6 +148,7 @@ const EditSeason = () => {
       seamov.append("gerneses", selectedGerneses); // Use selectedGerneses instead of gerneses
       seamov.append("dateoflaunch", selectedDate);
       seamov.append("imdb", imdb);
+      seamov.append("countries", selectedCountries);
       seamov.append("category", selectedCategories); // Use selectedCategories instead of category
       seamov.append("description", desc);
       seamov.append("tags", tagData);
@@ -153,6 +173,7 @@ const EditSeason = () => {
     getCategory();
     get_gernese();
     getSeasons();
+    getCounty()
   }, [])
 
   const handelsearchforgerneses = (event) => {
@@ -269,6 +290,20 @@ const EditSeason = () => {
                 placeholder="Press enter to add a tag"
               />
             </div>
+            {country.map((c) => (
+                  <li key={c._id}>
+                    <label>
+                      <input
+                        type='checkbox'
+                        name='country'
+                        value={c._id}
+                        onChange={handleCheckboxChangeCountry}
+                        checked={selectedCountries.includes(c._id)}
+                      />{' '}
+                      {c.name}
+                    </label>
+                  </li>
+                ))}
           </div>
           <div className='col-6'>
             <div className='name'>

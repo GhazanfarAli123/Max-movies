@@ -88,20 +88,16 @@ const EditMovie = () => {
             setSelectedCategories(prevSelected => prevSelected.filter(id => id !== categoryId));
         }
     };
-
     const handleCheckboxChangeCountry = (event) => {
         const countryId = event.target.value;
         const isChecked = event.target.checked;
-    
-        setSelectedCounties((prevSelected) => {
-            if (isChecked) {
-                return [...prevSelected, countryId];
-            } else {
-                return prevSelected.filter(id => id !== countryId);
-            }
-        });
-    };
 
+        if (isChecked) {
+            setSelectedCounties(prevSelected => [...prevSelected, countryId]);
+        } else {
+            setSelectedCounties(prevSelected => prevSelected.filter(id => id !== countryId));
+        }
+    };
 
     const handleCheckboxChangeGen = (event) => {
         const movId = event.target.value;
