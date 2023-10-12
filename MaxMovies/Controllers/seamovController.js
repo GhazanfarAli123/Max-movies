@@ -2,6 +2,7 @@ import slugify from "slugify";
 import seamovmodal from "../Modals/seamovmodal.js";
 import fs from "fs";
 import categorymodal from "../Modals/categorymodal.js";
+import gernseModal from "../Modals/gernse.js";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import path from 'path'; 
@@ -296,3 +297,32 @@ export const searchSeamov = async(req , res) =>{
     console.log(err)
   }
 }
+
+export const searchSeaMovie = async (req, res) => {
+  try {
+    const { keyword } = req.params;
+
+    const categoryIds = await categorymodal
+      .find({ name: { $regex: keyword, $options: "i" } })
+      .distinct("_id");
+    const genreIds = await gernseModal
+      .find({ name: { $regex: keyword, $options: "i" } })
+      .distinct("_id");
+
+    const result = await seamovmodal.find({
+      $or: [
+        { name: { $regex: keyword, $options: "i" } },
+        { description: { $regex: keyword, $options: "i" } },
+        { category: { $in: categoryIds } },
+        { gerneses: { $in: genreIds } }
+      ],
+    }).select("-imagePath");
+
+    res.send(result);
+console.log(result)
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
