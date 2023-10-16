@@ -149,6 +149,20 @@ export const getSeaMovid = async (req,res) =>{
   }
 }
 
+export const  getSeaMovByCat = async(req,res) =>{
+  try{
+    const category = req.params.id;
+
+    const data = await seamovmodal.find({category : category})
+
+    res.send(data);
+
+  }catch(err){
+    res.status(500).json({ message: 'Internal server error' });
+    console.log(err)
+  }
+}
+
 export const getSeaMovCat = async (req, res) => {
   try {
     const categoryName = req.params.category;

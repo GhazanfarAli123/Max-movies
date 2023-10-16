@@ -18,13 +18,16 @@ import AllSeaons from './Components/AllSeaons';
 import EditSeason from './Components/EditSeason';
 import SearchResultAdmin from './Components/SearchResutlAdmin';
 import SearchResult from './Components/SearchResult';
+import CategoryPage from './Pages/CategoryPage';
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="*" element={<SearchResult />} />
         <Route path="/search/:keyword" element={<SearchResult />} />
+        <Route path="/category/:id" element={<CategoryPage />} />
         <Route path="/signup" element={<AdminSignUp />} />
           <Route path="admin" element={<AdminLogIn />} />
         <Route path="admin" element={<AdminRoute />}>
