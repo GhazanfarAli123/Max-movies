@@ -227,9 +227,6 @@ const AddSeaons = () => {
       };
     };
   };
-  console.log(selectedCountry)
-
-
 
   return (
     <div className='bg-dark text-white'>

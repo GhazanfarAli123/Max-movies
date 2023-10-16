@@ -1,7 +1,6 @@
 import express from "express"
 import {requireSignIn} from "../middleware/authmiddleware.js"
 import { createCountry, deleteCountry, getCountry, updateCountry } from "../Controllers/countriesController.js"
-import { deleteCategory } from "../Controllers/categoryController.js"
 
 const router = express.Router()
 

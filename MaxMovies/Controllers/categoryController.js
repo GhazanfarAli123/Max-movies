@@ -41,8 +41,7 @@ export const updateCategory = async(req,res)=>{
 export const showCategory = async(req,res) =>{
     try{
         const getCatgories = await categorymodal.find({})
-        res.send(getCatgories)
-
+        res.send(getCatgories)  
     }catch(err){
         console.log(err)
         res.status(500).json({ message: "Error occurred while getting category." });

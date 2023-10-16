@@ -137,10 +137,7 @@ export const getSeaMovSlug = async (req,res) =>{
 
 export const getSeaMovid = async (req,res) =>{
   try{
-
-    
     const getSeaMov = await seamovmodal.findById(req.params.id).select("-photo")
-
     res.send(getSeaMov)
 
   }catch(err){
@@ -150,6 +147,7 @@ export const getSeaMovid = async (req,res) =>{
 }
 
 export const  getSeaMovByCat = async(req,res) =>{
+  
   try{
     const category = req.params.id;
 

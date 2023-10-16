@@ -46,6 +46,7 @@ const ClientNavBar = () => {
     useEffect(()=>{
         getGerneses();
         getCategories();
+        getCountry();
     },[])
 
     return (
