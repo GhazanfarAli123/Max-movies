@@ -59,3 +59,16 @@ export const deleteCategory = async(req,res) => {
         res.status(500).json({ message: "Error occurred while deleting category." });
     }
 }
+
+export const getCatBySlug = async(req,res) =>{
+    try{
+        const slug = req.params.slug;
+
+        const data = await categorymodal.find({slug : slug})
+
+        res.send(data)
+
+    }catch(err){
+        console.log(err)
+    }
+}

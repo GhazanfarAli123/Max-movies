@@ -58,7 +58,7 @@ const ClientNavBar = () => {
 
                         {category.map((c) =>(
                             <li class="nav-item active">
-                                <a class="nav-link" href={`/category/${c._id}`}>{c.name}</a>
+                                <a class="nav-link" href={`/category/${c.slug}`}>{c.name}</a>
                             </li>
                         ))}
                     </ul>
@@ -66,7 +66,7 @@ const ClientNavBar = () => {
                         <button class="dropbtn">Dropdown<i class="fa fa-caret-down"></i></button>
                         <div class="dropdown-content">
                             {gerneses.map((g)=>(
-                            <a href="#">{g.name}</a>
+                            <a href={`/gerneses/${g.slug}`}>{g.name}</a>
                             ))}
                         </div>
                     </div>
@@ -74,7 +74,7 @@ const ClientNavBar = () => {
                         <button class="dropbtn">Dropdown<i class="fa fa-caret-down"></i></button>
                         <div class="dropdown-content">
                             {countries.map((g)=>(
-                            <a href="/gerneses/id">{g.name}</a>
+                            <a href={`/countries/${g.slug}`}>{g.name}</a>
                             ))}
                         </div>
                     </div>

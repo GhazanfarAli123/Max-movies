@@ -1,6 +1,6 @@
 import express from "express"
 import {requireSignIn} from "../middleware/authmiddleware.js"
-import { createCategory, deleteCategory, showCategory, updateCategory } from "../Controllers/categoryController.js"
+import { createCategory, deleteCategory, getCatBySlug, showCategory, updateCategory } from "../Controllers/categoryController.js"
 
 const router = express.Router()
 
@@ -10,7 +10,8 @@ router.put("/update-category/:id",requireSignIn,updateCategory)
 
 router.get("/get-category",showCategory)
 
-router.delete("/delete-category/:id",requireSignIn,deleteCategory)
+router.get("/get-category/:slug",getCatBySlug)
 
+router.delete("/delete-category/:id",requireSignIn,deleteCategory)
 
 export default router
