@@ -20,6 +20,7 @@ import SearchResultAdmin from './Components/SearchResutlAdmin';
 import SearchResult from './Components/SearchResult';
 import CategoryPage from './Pages/CategoryPage';
 import Error404 from './Components/404';
+import CountryPage from './Pages/CountryPage';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
         <Route path="*" element={<Error404 />} />
         <Route path="/search/:keyword" element={<SearchResult />} />
         <Route path="/category/:slug" element={<CategoryPage />} />
+        <Route path="/country/:slug" element={<CountryPage />} />
         <Route path="/404" element={<Error404 />} />
         <Route path="/signup" element={<AdminSignUp />} />
           <Route path="admin" element={<AdminLogIn />} />

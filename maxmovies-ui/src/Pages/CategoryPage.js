@@ -14,8 +14,8 @@ const CategoryPage = () => {
 
     const getCategory = async () => {
         try {
-            const { data } = await axios.get("http://localhost:1000/api/v1/category/get-category")
-            setCategoryid(data)
+            const { data } = await axios.get("http://localhost:1000/api/v1/category/get-category");
+            setCategoryid(data);
         } catch (err) {
             console.log(err);
         }
@@ -23,21 +23,35 @@ const CategoryPage = () => {
 
     const getCategoryBySlug = async () => {
         try {
-            const { data } = await axios.get(`http://localhost:1000/api/v1/category/get-category/${slug}`)
-            setCatregoryBySlug(data[0]._id)
+            const { data } = await axios.get(`http://localhost:1000/api/v1/category/get-category/${slug}`);
+            if (data && data.length > 0) {
+                setCatregoryBySlug(data[0]._id);
+            } else {
+                navigate('/404');
+            }
         } catch (err) {
             console.log(err);
+            navigate('/404');
         }
     }
 
     useEffect(() => {
-        getCategoryBySlug();
-        getCategory();
-    }, [slug]); // Include slug as a dependency.
+        const fetchData = async () => {
+            try {
+                await getCategory();
+                await getCategoryBySlug();
+            } catch (err) {
+                console.log(err);
+                navigate('/404');
+            }
+        };
+        fetchData();
+    }, [slug, navigate]);
+
+
 
     useEffect(() => {
         if (catregoryBySlug) {
-            // Make the API request only when catregoryBySlug is available
             getDataCategory(catregoryBySlug);
         }
     }, [catregoryBySlug]);
@@ -48,13 +62,15 @@ const CategoryPage = () => {
             setCategoryData(data);
         } catch (err) {
             console.log(err);
+            navigate('/404');
         }
     }
-    console.log(categoryData)
+
     const category = categoryid.find((cat) => cat.slug === slug);
     if (!category) {
         navigate('/404');
     }
+
 
     if (categoryData.length === 0) {
         return <div>Loading...</div>;

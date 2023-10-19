@@ -74,7 +74,7 @@ const ClientNavBar = () => {
                         <button class="dropbtn">Dropdown<i class="fa fa-caret-down"></i></button>
                         <div class="dropdown-content">
                             {countries.map((g)=>(
-                            <a href={`/countries/${g.slug}`}>{g.name}</a>
+                            <a href={`/country/${g.slug}`}>{g.name}</a>
                             ))}
                         </div>
                     </div>

@@ -55,3 +55,17 @@ export const deleteCountry = async(req,res) =>{
         res.status(500).json({ message: "Error occurred while deleting country." });  
     }
 }
+
+
+export const getcountrybyslug = async(req,res) =>{
+    try{
+        const slug = req.params.slug
+
+        const data = await countriesmodal.find({slug : slug})
+
+        res.send(data)
+
+    }catch(err){
+        console.log(err)
+    }
+}

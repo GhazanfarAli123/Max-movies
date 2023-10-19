@@ -29,7 +29,7 @@ function navbar() {
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               {category.map((c)=>(
                   <li class="nav-item" key={c._id}>
-                    <a class="nav-link" aria-current="page" href={`/category/${c._id}`}>{c.name}</a>
+                    <a class="nav-link" aria-current="page" href={`/category/${c.slug}`}>{c.name}</a>
                   </li>  
               ))}
             </ul>
