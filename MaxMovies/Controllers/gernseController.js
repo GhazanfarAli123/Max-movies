@@ -55,3 +55,17 @@ export const deleteGernse = async(req,res) =>{
         res.status(500).send('Internal Server Error');
     }
 }
+
+
+export const getGernesesBySlug = async(req,res) =>{
+    try{
+        const slug = req.params.slug;
+
+        const data = await gernseModal.find({slug : slug})
+
+        res.send(data)
+
+    }catch(err){
+        console.log(err)
+    }
+}

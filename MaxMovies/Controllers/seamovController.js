@@ -160,6 +160,22 @@ export const  getSeaMovByCat = async(req,res) =>{
   }
 }
 
+export const  getSeaMovByGer = async(req,res) =>{
+  
+  try{
+    const id = req.params.id;
+
+    const data = await seamovmodal.find({gerneses : id})
+
+    res.send(data);
+
+  }catch(err){
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+
+
 export const  getSeaMovByCountry = async(req,res) =>{
   
   try{
