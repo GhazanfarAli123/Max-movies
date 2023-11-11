@@ -11,6 +11,8 @@ const CategoryPage = () => {
     const [categoryData, setCategoryData] = useState([]);
     const [categoryid, setCategoryid] = useState([]);
     const [catregoryBySlug, setCatregoryBySlug] = useState('');
+    const [catregoryByName, setCatregoryByName] = useState('');
+
 
     const getCategory = async () => {
         try {
@@ -26,6 +28,8 @@ const CategoryPage = () => {
             const { data } = await axios.get(`http://localhost:1000/api/v1/category/get-category/${slug}`);
             if (data && data.length > 0) {
                 setCatregoryBySlug(data[0]._id);
+                setCatregoryByName(data[0].name);
+
             } else {
                 navigate('/404');
             }
@@ -79,16 +83,28 @@ const CategoryPage = () => {
     return (
         <>
             <ClientNavBar />
+            <body>
             <div className='container'>
                 <div className='row'>
+                    <div className='col-lg-12 name'>
+                        <h2>{catregoryByName}</h2>
+                    </div>
                     {categoryData.map((e) =>(
-                        <div className='col-3' key={e._id}>
-                            {e.name}
+                        
+                           
+                            <div id='lr' class="col-mg-5">
+                           <a href={`/${catregoryByName}/${e.slug}`}>
+                            <div id='nam' className='col-3' style={{backgroundImage : `url("http://localhost:1000/api/v1/seamov/sea-photo/${e._id}")`}} key={e._id}> {e.name}
+                            <i id='plays' class="fa fa-play fa-3x" aria-hidden="true"></i>
+
+                            </div>
+                            </a>
                         </div>
                     ))}
-                    <Pr categoryData={categoryData} />
+                   {/* <Pr data={categoryData} /> */}
                 </div>
             </div>
+            </body>
         </>
     );
 }

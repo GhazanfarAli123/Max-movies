@@ -68,7 +68,16 @@ const GernesesPage = () => {
   return (
     <>
         <ClientNavBar />
-        <Pr gern={gernesesData}/>
+        <div className='row'>
+            {gernesesData.map((e)=>(
+                <>
+                <div className='col-3'>
+                    {e.name}
+                    <img src={`http://localhost:1000/api/v1/seamov/sea-photo/${e._id}`} />
+                </div>
+                </>
+            ))}
+        </div>
     </>
   )
 }

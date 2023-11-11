@@ -50,3 +50,90 @@ ul{
 .dropdown:hover .dropdown-content {display: block;}
 
 .dropdown:hover .dropbtn {background-color: #3e8e41;}
+#wq{
+  margin-top: 10px;
+  background-color: transparent;
+}
+#ww{
+  position: relative;
+  left: 500px;
+  background-color: transparent;
+  /* margin-left: 200px; */
+}
+#qq{
+  text-align: center;
+  margin-top: 200px;
+  height: 200px;
+  opacity: 1;
+  background-color:transparent;
+}
+body{
+
+  overflow-x: hidden;
+background-color: black;
+
+}
+#p{
+  text-align: center;
+  color: #f1f1f1;
+
+}
+#o{
+  color: #f1f1f1;
+  position: relative;
+  top: 30px;
+  left:100px; 
+  font-style: inherit;
+  font-weight: 800;
+
+}
+#i{
+   color: #f1f1f1;
+  position: relative;
+  top: 30px;
+  left: 100px;
+  font-size:medium;
+  font-weight: 400;
+ overflow: hidden;
+}
+#e{
+  margin-top: 100px;
+}
+#cat{
+ 
+  height: 200px;
+  width: 150px;
+  position: relative;
+  top: 90px;
+  left: 60px;
+  transition: .5s ease;
+  
+}
+#nam{
+  height: 200px;
+  background-size: cover;
+  color: #ddd;
+  font-weight: 700;
+  text-align: center;
+  padding-top: 150px;
+  
+}
+#plays{
+  color: red;
+  position: relative;
+  bottom: 80px;
+  right: 50px;
+  opacity: 0;
+  
+  transition: 1.3s ease;
+}
+#nam:hover #plays{
+  opacity: 1;
+}
+#lr{
+  margin-top: 100px;
+}
+
+.name{
+  text-transform: uppercase;
+}

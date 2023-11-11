@@ -22,6 +22,7 @@ import CategoryPage from './Pages/CategoryPage';
 import Error404 from './Components/404';
 import CountryPage from './Pages/CountryPage';
 import GernesesPage from './Pages/GernesesPage';
+import MoviePage from './Pages/MoviePage';
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
         <Route path="/category/:slug" element={<CategoryPage />} />
         <Route path="/gerneses/:slug" element={<GernesesPage />} />
         <Route path="/country/:slug" element={<CountryPage />} />
+        <Route path="/:category/:slug" element={<MoviePage />} />
         <Route path="/404" element={<Error404 />} />
         <Route path="/signup" element={<AdminSignUp />} />
           <Route path="admin" element={<AdminLogIn />} />

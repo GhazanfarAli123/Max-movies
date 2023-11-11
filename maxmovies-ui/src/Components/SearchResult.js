@@ -28,12 +28,12 @@ const SearchResult = () => {
                 <div className='row'>
                     {searchData.map((m) => (
                         <>
-                            {/* <div className='col-3' key={m._id}>
+                             <div className='col-3' key={m._id}>
                             {m.name}
-                        </div> */}
+                            <img src={`http://localhost:1000/api/v1/seamov/sea-photo/${m._id}`} />
+                        </div>
                         </>
                     ))}
-                    <pre>{JSON.stringify(searchData, null, 2)}</pre>
                 </div>
             </div>
 
