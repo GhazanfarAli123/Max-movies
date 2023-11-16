@@ -92,10 +92,10 @@ const CategoryPage = () => {
                     {categoryData.map((e) =>(
                         
                            
-                            <div id='lr' class="col-mg-5">
+                            <div id='lr' class="col-lg-1">
                            <a href={`/${catregoryByName}/${e.slug}`}>
                             <div id='nam' className='col-3' style={{backgroundImage : `url("http://localhost:1000/api/v1/seamov/sea-photo/${e._id}")`}} key={e._id}> {e.name}
-                            <i id='plays' class="fa fa-play fa-3x" aria-hidden="true"></i>
+                            <i id='plays' class="fa fa-play fa-2x" aria-hidden="true"></i>
 
                             </div>
                             </a>

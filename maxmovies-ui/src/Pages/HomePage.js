@@ -29,11 +29,11 @@ const HomePage = () => {
           <div className='col-3'></div>
           <div id='wq' className='col-6'>
             <form class="form-inline my-2 my-lg-0">
-              <input  class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"
+              <input  class="form-control mr-sm-2 col-lg-" type="search" placeholder="Search" aria-label="Search"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
-              <button class="btn btn-outline-danger my-2 my-sm-0" onClick={searchBtn} type="submit">Search</button>
+              <button class="btn btn-outline-danger my-2 my-sm-0 " onClick={searchBtn} type="submit">Search</button>
             </form>
           </div>
           <div className='col-3'></div>

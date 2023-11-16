@@ -70,7 +70,7 @@ ul{
 body{
 
   overflow-x: hidden;
-background-color: black;
+background-color: #848484;
 
 }
 #p{
@@ -111,29 +111,57 @@ background-color: black;
 }
 #nam{
   height: 200px;
+  width: 150px;
   background-size: cover;
+  background-repeat: no-repeat;
   color: #ddd;
   font-weight: 700;
   text-align: center;
-  padding-top: 150px;
+  padding-top: 176px;
+  opacity: 1;
+  transition: 1.3s ease;
   
 }
 #plays{
-  color: red;
+  color: white;height: 60px;
+  width: 60px;
   position: relative;
-  bottom: 80px;
-  right: 50px;
+  bottom: 120px;
+  right: 0px;
+  padding: 6px;
+  padding-left: 10px;
+  padding-top: 15px;
   opacity: 0;
-  
+  background-color: red;
+  border-radius: 50%;
   transition: 1.3s ease;
 }
 #nam:hover #plays{
-  opacity: 1;
+  opacity: 3;
+  
 }
+#nam:hover{
+  opacity: 0.8;
+}
+
 #lr{
   margin-top: 100px;
+  height: 200px;
+  /* width: 600px; */
+  background-size: cover;
 }
 
 .name{
   text-transform: uppercase;
+  color:black;
+  text-decoration: underline;
+  margin-right: 200px;
+  position: relative;
+  top: 60px;
+  right: 30px;
+ 
+}
+#ti{
+  background-color: red;
+  
 }
