@@ -39,6 +39,22 @@ export const getEpisodes = async(req,res) =>{
     }
 }
 
+export const getEpisodesById = async(req,res) =>{
+    try{
+
+        const {id} = req.params.id
+
+        const getEpisodes = await episodesmodal.findById({_id:id})
+        
+        res.send(getEpisodes)
+
+    }catch(err){
+        console.error(err);
+        res.status(500).json({ message: "internal Server Error." });        
+
+    }
+}
+
 export const updateEpisodes = async(req,res) =>{
     try{
         const {name,episode} =req.body

@@ -55,3 +55,15 @@ export const getSeason = async(req,res) =>{
         res.status(500).json({ message: "Error occurred while adding season." });  
     }
 }
+
+export const getSeasonById = async(req,res) =>{
+    try{
+        const {id} = req.params
+        const getSeason = await seasonModal.find({_id: id})
+        res.send(getSeason)
+
+    }catch(err){
+        console.error(err);
+        res.status(500).json({ message: "Error occurred while getting season." });  
+    }
+}
