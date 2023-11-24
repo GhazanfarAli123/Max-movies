@@ -1,14 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect , useState } from "react";
 import { useAuth } from "../Context/auth";
-import axios from 'axios';
-import { Outlet, useNavigate } from "react-router-dom";
+import axios from 'axios'
+import { Outlet } from "react-router-dom";
 import HomePage from "../Pages/HomePage";
 import { AdminDashboard } from "../Pages/AdminDashboard";
 
 export default function AdminRoute() {
+    const [ok, setOk] = useState(false);
     const [auth, setAuth] = useAuth();
-    const [loading, setLoading] = useState(true);
-    const navigate = useNavigate();
 
     useEffect(() => {
         const authCheck = async () => {
@@ -18,37 +17,18 @@ export default function AdminRoute() {
                         "auth-token": auth.token
                     }
                 });
-
                 if (res.data.ok) {
-                    setLoading(false);
+                    setOk(true);
                 } else {
-                    setLoading(false);
-                    setAuth({}); // Clear authentication to prevent further unauthorized requests
+                    setOk(false);
                 }
             } catch (err) {
-                setLoading(false);
+                setOk(false);
                 console.log(err);
-                setAuth({}); // Clear authentication in case of an error
             }
         };
+        if (auth?.token) authCheck();
+    }, [auth?.token]);
 
-        if (auth.token) {
-            authCheck();
-        } else {
-            setLoading(false);
-        }
-    }, [auth.token, setAuth]);
-
-    if (loading) {
-        // You may want to show a loading spinner or some indication while checking authentication
-        return <div>Loading...</div>;
-    }
-
-    if (!auth.token) {
-        // Redirect to the home page if there is no auth token
-        navigate('/admin');
-        return null; // Return null to prevent rendering anything else while redirecting
-    }
-
-    return <AdminDashboard />;
+    return ok ? <Outlet /> : <AdminDashboard />;
 }
