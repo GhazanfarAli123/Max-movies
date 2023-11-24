@@ -3,7 +3,6 @@ import { useAuth } from "../Context/auth";
 import axios from 'axios'
 import { Outlet } from "react-router-dom";
 import HomePage from "../Pages/HomePage";
-import { AdminDashboard } from "../Pages/AdminDashboard";
 
 export default function AdminRoute() {
     const [ok, setOk] = useState(false);
@@ -30,5 +29,5 @@ export default function AdminRoute() {
         if (auth?.token) authCheck();
     }, [auth?.token]);
 
-    return ok ? <Outlet /> : <AdminDashboard />;
+    return ok ? <Outlet /> : <HomePage />;
 }
